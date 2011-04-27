@@ -184,7 +184,7 @@ namespace Intelligencia.UrlRewriter.Configuration
         private static void ReadMapping(XmlNode node, IRewriterConfiguration config)
         {
             // Name attribute.
-            XmlNode nameNode = node.Attributes[Constants.AttrName];
+            string mappingName = node.GetRequiredAttribute(Constants.AttrName);
 
             // Mapper type not specified.  Load in the hash map.
             StringDictionary map = new StringDictionary();
@@ -206,7 +206,9 @@ namespace Intelligencia.UrlRewriter.Configuration
                 }
             }
 
-            config.TransformFactory.AddTransform(new StaticMappingTransform(nameNode.Value, map));
+            IRewriteTransform mapping = new StaticMappingTransform(mappingName, map);
+
+            config.TransformFactory.AddTransform(mapping);
         }
 
         private static void ReadRule(XmlNode node, IRewriterConfiguration config)

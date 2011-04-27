@@ -46,7 +46,9 @@ namespace Intelligencia.UrlRewriter.Configuration
         /// <returns>The transform object.</returns>
         public IRewriteTransform GetTransform(string name)
         {
-            return _transforms[name];
+            return (_transforms.ContainsKey(name))
+                ? _transforms[name]
+                : null;
         }
 
         private IDictionary<string, IRewriteTransform> _transforms = new Dictionary<string, IRewriteTransform>();

@@ -6,8 +6,10 @@
 // 
 
 using System;
+using System.Configuration;
 using System.IO;
 using System.Net;
+using System.Threading;
 using System.Web;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -256,8 +258,7 @@ namespace Intelligencia.UrlRewriter
 
         private void VerifyResultExists(RewriteContext context)
         {
-            if ((String.Compare(context.Location, _httpContext.RawUrl) != 0) &&
-                ((int)context.StatusCode < 300))
+            if ((String.Compare(context.Location, _httpContext.RawUrl) != 0) && ((int)context.StatusCode < 300))
             {
                 Uri uri = new Uri(_httpContext.RequestUrl, context.Location);
                 if (uri.Host == _httpContext.RequestUrl.Host)
@@ -284,28 +285,32 @@ namespace Intelligencia.UrlRewriter
             // Get the error handler if there is one.
             if (_configuration.ErrorHandlers.ContainsKey((int)context.StatusCode))
             {
-                IRewriteErrorHandler handler = _configuration.ErrorHandlers[(int)context.StatusCode];
-
-                try
-                {
-                    _configuration.Logger.Debug(MessageProvider.FormatString(Message.CallingErrorHandler));
-
-                    // Execute the error handler.
-                    _httpContext.HandleError(handler);
-                }
-                catch (HttpException)
-                {
-                    throw;
-                }
-                catch (Exception exc)
-                {
-                    _configuration.Logger.Fatal(exc.Message, exc);
-                    throw new HttpException((int)HttpStatusCode.InternalServerError, HttpStatusCode.InternalServerError.ToString());
-                }
-            }
-            else
-            {
+                // No error handler for this status code?
+                // Just throw an HttpException with the appropriate status code.
                 throw new HttpException((int)context.StatusCode, context.StatusCode.ToString());
+            }
+
+            IRewriteErrorHandler handler = _configuration.ErrorHandlers[(int) context.StatusCode];
+
+            try
+            {
+                _configuration.Logger.Debug(MessageProvider.FormatString(Message.CallingErrorHandler));
+
+                // Execute the error handler.
+                _httpContext.HandleError(handler);
+            }
+            catch (HttpException)
+            {
+                // Any HTTP errors that result from executing the error page should be propogated.
+                throw;
+            }
+            catch (Exception exc)
+            {
+                // Any other error should result in a 500 Internal Server Error.
+                _configuration.Logger.Error(exc.Message, exc);
+
+                HttpStatusCode serverError = HttpStatusCode.InternalServerError;
+                throw new HttpException((int)serverError, serverError.ToString());
             }
         }
 
@@ -338,7 +343,7 @@ namespace Intelligencia.UrlRewriter
         }
 
         /// <summary>
-        /// The raw url.
+        /// The raw URL.
         /// </summary>
         public string RawUrl
         {
@@ -436,8 +441,14 @@ namespace Intelligencia.UrlRewriter
                         }
                         else
                         {
-                            if (ch == ':') isMap = true;
-                            else if (ch == '(') isFunction = true;
+                            if (ch == ':')
+                            {
+                                isMap = true;
+                            }
+                            else if (ch == '(')
+                            {
+                                isFunction = true;
+                            }
                             writer.Write(ch);
                         }
                         ch = (char)reader.Read();
@@ -452,19 +463,28 @@ namespace Intelligencia.UrlRewriter
                     string mapName = match.Groups[1].Value;
                     string mapArgument = match.Groups[2].Value;
                     string mapDefault = match.Groups[4].Value;
-                    result = _configuration.TransformFactory.GetTransform(mapName).ApplyTransform(mapArgument);
-                    if (result == null)
+
+                    IRewriteTransform tx = _configuration.TransformFactory.GetTransform(mapName);
+                    if (tx == null)
                     {
-                        result = mapDefault;
+                        throw new ConfigurationErrorsException(MessageProvider.FormatString(Message.MappingNotFound, mapName));
                     }
+
+                    result = tx.ApplyTransform(mapArgument) ?? mapDefault;
                 }
                 else if (isFunction)
                 {
                     Match match = Regex.Match(expr, @"^([^\(]+)\((.+)\)$");
                     string functionName = match.Groups[1].Value;
                     string functionArgument = match.Groups[2].Value;
+
                     IRewriteTransform tx = _configuration.TransformFactory.GetTransform(functionName);
-                    result = (tx == null) ? expr : tx.ApplyTransform(functionArgument);
+                    if (tx == null)
+                    {
+                        throw new ConfigurationErrorsException(MessageProvider.FormatString(Message.TransformFunctionNotFound, functionName));
+                    }
+
+                    result = tx.ApplyTransform(functionArgument);
                 }
                 else
                 {

@@ -142,7 +142,7 @@
     <value>Type name is required.</value>
   </data>
   <data name="InvalidTypeSpecified" xml:space="preserve">
-    <value>The type '{0}' cannot be activated or does not support the required interface {1}.</value>
+    <value>The type '{0}' cannot be activated or does not support the required interface '{1}'.</value>
   </data>
   <data name="AssemblyNameRequired" xml:space="preserve">
     <value>Assembly name is required.</value>
@@ -197,5 +197,11 @@
   </data>
   <data name="MissingConfigFileSection" xml:space="preserve">
     <value>The application config file is missing the required section '{0}'.</value>
+  </data>
+  <data name="MappingNotFound" xml:space="preserve">
+    <value>The mapping '{0}' cannot be found in the rewriter config.  Please review your rewriting rules and implement the missing mapping.</value>
+  </data>
+  <data name="TransformFunctionNotFound" xml:space="preserve">
+    <value>The transformation function '{0}' is undefined.  Please review your rewriting rules and add the missing transform, or use one of the built-in transform functions.</value>
   </data>
 </root>

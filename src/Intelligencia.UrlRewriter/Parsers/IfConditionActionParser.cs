@@ -50,7 +50,7 @@ namespace Intelligencia.UrlRewriter.Parsers
         /// <param name="node">The node to parse.</param>
         /// <param name="config">The rewriter configuration.</param>
         /// <returns>The parsed action, null if no action parsed.</returns>
-        public override IRewriteAction Parse(XmlNode node, RewriterConfiguration config)
+        public override IRewriteAction Parse(XmlNode node, IRewriterConfiguration config)
         {
             if (node == null)
             {
@@ -73,7 +73,7 @@ namespace Intelligencia.UrlRewriter.Parsers
             return rule;
         }
 
-        private static void ReadActions(XmlNode node, IList<IRewriteAction> actions, RewriterConfiguration config)
+        private static void ReadActions(XmlNode node, IList<IRewriteAction> actions, IRewriterConfiguration config)
         {
             XmlNode childNode = node.FirstChild;
             while (childNode != null)

@@ -28,7 +28,7 @@ namespace Intelligencia.UrlRewriter.Configuration
         /// <param name="config">The rewriter configuration object to populate.</param>
         /// <param name="section">The XML node to read configuration from.</param>
         /// <returns>The configuration information.</returns>
-        public static void Read(RewriterConfiguration config, XmlNode section)
+        public static void Read(IRewriterConfiguration config, XmlNode section)
         {
             if (section == null)
             {
@@ -74,7 +74,7 @@ namespace Intelligencia.UrlRewriter.Configuration
             }
         }
 
-        private static void ReadRegisterTransform(XmlNode node, RewriterConfiguration config)
+        private static void ReadRegisterTransform(XmlNode node, IRewriterConfiguration config)
         {
             if (node.ChildNodes.Count > 0)
             {
@@ -94,7 +94,7 @@ namespace Intelligencia.UrlRewriter.Configuration
             config.TransformFactory.AddTransform(transform);
         }
 
-        private static void ReadRegisterLogger(XmlNode node, RewriterConfiguration config)
+        private static void ReadRegisterLogger(XmlNode node, IRewriterConfiguration config)
         {
             if (node.ChildNodes.Count > 0)
             {
@@ -112,7 +112,7 @@ namespace Intelligencia.UrlRewriter.Configuration
             }
         }
 
-        private static void ReadRegisterParser(XmlNode node, RewriterConfiguration config)
+        private static void ReadRegisterParser(XmlNode node, IRewriterConfiguration config)
         {
             if (node.ChildNodes.Count > 0)
             {
@@ -135,7 +135,7 @@ namespace Intelligencia.UrlRewriter.Configuration
             }
         }
 
-        private static void ReadDefaultDocuments(XmlNode node, RewriterConfiguration config)
+        private static void ReadDefaultDocuments(XmlNode node, IRewriterConfiguration config)
         {
             foreach (XmlNode childNode in node.ChildNodes)
             {
@@ -146,7 +146,7 @@ namespace Intelligencia.UrlRewriter.Configuration
             }
         }
 
-        private static void ReadErrorHandler(XmlNode node, RewriterConfiguration config)
+        private static void ReadErrorHandler(XmlNode node, IRewriterConfiguration config)
         {
             string code = node.GetRequiredAttribute(Constants.AttrCode);
 
@@ -181,7 +181,7 @@ namespace Intelligencia.UrlRewriter.Configuration
             config.ErrorHandlers.Add(statusCode, handler);
         }
 
-        private static void ReadMapping(XmlNode node, RewriterConfiguration config)
+        private static void ReadMapping(XmlNode node, IRewriterConfiguration config)
         {
             // Name attribute.
             XmlNode nameNode = node.Attributes[Constants.AttrName];
@@ -209,7 +209,7 @@ namespace Intelligencia.UrlRewriter.Configuration
             config.TransformFactory.AddTransform(new StaticMappingTransform(nameNode.Value, map));
         }
 
-        private static void ReadRule(XmlNode node, RewriterConfiguration config)
+        private static void ReadRule(XmlNode node, IRewriterConfiguration config)
         {
             bool parsed = false;
             IList<IRewriteActionParser> parsers = config.ActionParserFactory.GetParsers(node.LocalName);

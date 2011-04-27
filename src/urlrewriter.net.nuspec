@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>UrlRewriter.Net</id>
+    <version>2.1.0</version>
+    <authors>Seth Yates, Stewart Rae</authors>
+    <owners>Seth Yates</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectUrl>http://urlrewriter.net/</projectUrl>
+    <licenseUrl>http://www.opensource.org/licenses/mit-license.php</licenseUrl>
+    <summary>Easy URL Rewriting for .NET</summary>
+    <description>Easy URL Rewriting for .NET</description>
+  </metadata>
+  <files>
+    <file src="..\bin\Release\*.dll" target="lib" />
+  </files>
+</package>

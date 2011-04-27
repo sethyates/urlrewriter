@@ -60,8 +60,10 @@ namespace Intelligencia.UrlRewriter.Actions
             {
                 throw new ArgumentNullException("context");
             }
+
             HttpCookie cookie = new HttpCookie(Name, Value);
             context.ResponseCookies.Add(cookie);
+
             return RewriteProcessing.ContinueProcessing;
         }
 

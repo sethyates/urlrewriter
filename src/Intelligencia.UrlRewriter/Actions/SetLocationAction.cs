@@ -47,7 +47,9 @@ namespace Intelligencia.UrlRewriter.Actions
             {
                 throw new ArgumentNullException("context");
             }
+
             context.Location = context.ResolveLocation(context.Expand(Location));
+
             return RewriteProcessing.StopProcessing;
         }
 

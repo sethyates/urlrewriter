@@ -59,7 +59,9 @@ namespace Intelligencia.UrlRewriter.Actions
             {
                 throw new ArgumentNullException("context");
             }
+
             context.ResponseHeaders.Add(Header, Value);
+
             return RewriteProcessing.ContinueProcessing;
         }
 

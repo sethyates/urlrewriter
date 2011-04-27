@@ -91,7 +91,7 @@ namespace Intelligencia.UrlRewriter.Configuration
                 throw new ConfigurationErrorsException(MessageProvider.FormatString(Message.InvalidTypeSpecified, type, typeof(IRewriteTransform)), node);
             }
 
-            config.TransformFactory.AddTransform(transform);
+            config.TransformFactory.Add(transform);
         }
 
         private static void ReadRegisterLogger(XmlNode node, IRewriterConfiguration config)
@@ -125,13 +125,13 @@ namespace Intelligencia.UrlRewriter.Configuration
             IRewriteActionParser actionParser = parser as IRewriteActionParser;
             if (actionParser != null)
             {
-                config.ActionParserFactory.AddParser(actionParser);
+                config.ActionParserFactory.Add(actionParser);
             }
 
             IRewriteConditionParser conditionParser = parser as IRewriteConditionParser;
             if (conditionParser != null)
             {
-                config.ConditionParserPipeline.AddParser(conditionParser);
+                config.ConditionParserPipeline.Add(conditionParser);
             }
         }
 
@@ -208,7 +208,7 @@ namespace Intelligencia.UrlRewriter.Configuration
 
             IRewriteTransform mapping = new StaticMappingTransform(mappingName, map);
 
-            config.TransformFactory.AddTransform(mapping);
+            config.TransformFactory.Add(mapping);
         }
 
         private static void ReadRule(XmlNode node, IRewriterConfiguration config)

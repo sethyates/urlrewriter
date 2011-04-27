@@ -16,6 +16,7 @@ namespace Intelligencia.UrlRewriter.Configuration
     /// </summary>
     public class TransformFactory
     {
+        /*
         /// <summary>
         /// Adds a transform.
         /// </summary>
@@ -24,12 +25,13 @@ namespace Intelligencia.UrlRewriter.Configuration
         {
             AddTransform((IRewriteTransform)TypeHelper.Activate(transformType, null));
         }
+         */
 
         /// <summary>
         /// Adds a transform.
         /// </summary>
         /// <param name="transform">The transform object.</param>
-        public void AddTransform(IRewriteTransform transform)
+        public void Add(IRewriteTransform transform)
         {
             if (transform == null)
             {

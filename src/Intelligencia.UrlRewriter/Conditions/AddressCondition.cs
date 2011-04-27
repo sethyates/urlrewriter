@@ -40,7 +40,9 @@ namespace Intelligencia.UrlRewriter.Conditions
             {
                 throw new ArgumentNullException("context");
             }
+
             string ipAddress = context.Properties[Constants.RemoteAddressHeader];
+
             return (ipAddress != null && _range.InRange(IPAddress.Parse(ipAddress)));
         }
 

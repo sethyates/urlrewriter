@@ -60,7 +60,9 @@ namespace Intelligencia.UrlRewriter.Actions
             {
                 throw new ArgumentNullException("context");
             }
+
             context.Properties.Set(Name, context.Expand(Value));
+
             return RewriteProcessing.ContinueProcessing;
         }
 

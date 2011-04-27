@@ -42,7 +42,9 @@ namespace Intelligencia.UrlRewriter.Actions
             {
                 throw new ArgumentNullException("context");
             }
+
             context.StatusCode = StatusCode;
+
             return ((int)StatusCode >= 300)
                     ? RewriteProcessing.StopProcessing
                     : RewriteProcessing.ContinueProcessing;

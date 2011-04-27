@@ -4,9 +4,10 @@
         <name>Intelligencia.UrlRewriter</name>
     </assembly>
     <members>
-        <member name="T:Intelligencia.UrlRewriter.Transforms.Base64DecodeTransform">
+        <member name="T:Intelligencia.UrlRewriter.Transforms.StaticMappingTransform">
             <summary>
-            Base 64 encodes the input.
+            Default RewriteMapper, reads its maps from config.
+            The mapping is CASE-INSENSITIVE.
             </summary>
         </member>
         <member name="T:Intelligencia.UrlRewriter.IRewriteTransform">
@@ -26,16 +27,183 @@
             The name of the transform.
             </summary>
         </member>
-        <member name="M:Intelligencia.UrlRewriter.Transforms.Base64DecodeTransform.ApplyTransform(System.String)">
+        <member name="M:Intelligencia.UrlRewriter.Transforms.StaticMappingTransform.#ctor(System.String,System.Collections.Specialized.StringDictionary)">
             <summary>
-            Applies a transformation to the input string.
+            Default constructor.
             </summary>
-            <param name="input">The input string.</param>
-            <returns>The transformed string.</returns>
+            <param name="name">The name of the mapping.</param>
+            <param name="map">The mappings.</param>
         </member>
-        <member name="P:Intelligencia.UrlRewriter.Transforms.Base64DecodeTransform.Name">
+        <member name="M:Intelligencia.UrlRewriter.Transforms.StaticMappingTransform.ApplyTransform(System.String)">
+            <summary>
+            Maps the specified value in the specified map to its replacement value.
+            </summary>
+            <param name="input">The value being mapped.</param>
+            <returns>The value mapped to, or null if no mapping could be performed.</returns>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Transforms.StaticMappingTransform.Name">
             <summary>
             The name of the action.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.RewriterEngine">
+            <summary>
+            The core RewriterEngine class.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Intelligencia.UrlRewriter.RewriterEngine.#ctor(Intelligencia.UrlRewriter.Utilities.IHttpContext,Intelligencia.UrlRewriter.Configuration.IConfigurationManager,Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration)" -->
+        <member name="M:Intelligencia.UrlRewriter.RewriterEngine.ResolveLocation(System.String)">
+            <summary>
+            Resolves an Application-path relative location
+            </summary>
+            <param name="location">The location</param>
+            <returns>The absolute location.</returns>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.RewriterEngine.Rewrite">
+            <summary>
+            Performs the rewriting.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.RewriterEngine.Expand(Intelligencia.UrlRewriter.RewriteContext,System.String)">
+            <summary>
+            Expands the given input based on the current context.
+            </summary>
+            <param name="context">The current context</param>
+            <param name="input">The input to expand.</param>
+            <returns>The expanded input</returns>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.RewriterEngine.RawUrl">
+            <summary>
+            The raw URL.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.RewriterEngine.OriginalQueryString">
+            <summary>
+            The original query string.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.RewriterEngine.QueryString">
+            <summary>
+            The final querystring, after rewriting.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Configuration.RewriterConfiguration">
+            <summary>
+            Configuration for the URL rewriter.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration">
+            <summary>
+            Interface for the rewriter's configuration.
+            Useful for plugging out config in unit tests.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration.Rules">
+            <summary>
+            The rules.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration.ActionParserFactory">
+            <summary>
+            The action parser factory.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration.TransformFactory">
+            <summary>
+            The transform factory.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration.ConditionParserPipeline">
+            <summary>
+            The condition parser pipeline.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration.ErrorHandlers">
+            <summary>
+            Dictionary of error handlers.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration.Logger">
+            <summary>
+            Logger to use for logging information.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration.DefaultDocuments">
+            <summary>
+            Collection of default document names to use if the result of a rewriting
+            is a directory name.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration.XPoweredBy">
+            <summary>
+            Additional X-Powered-By header.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration.ConfigurationManager">
+            <summary>
+            The configuration manager instance.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Configuration.RewriterConfiguration.#ctor">
+            <summary>
+            Default constructor.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Configuration.RewriterConfiguration.#ctor(Intelligencia.UrlRewriter.Configuration.IConfigurationManager)">
+            <summary>
+            Constructor.
+            </summary>
+            <param name="configurationManager">The configuration manager instance</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Configuration.RewriterConfiguration.LoadFromConfig">
+            <summary>
+            Loads the rewriter configuration from the web.config file.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Configuration.RewriterConfiguration.Rules">
+            <summary>
+            The rules.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Configuration.RewriterConfiguration.ActionParserFactory">
+            <summary>
+            The action parser factory.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Configuration.RewriterConfiguration.TransformFactory">
+            <summary>
+            The transform factory.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Configuration.RewriterConfiguration.ConditionParserPipeline">
+            <summary>
+            The condition parser pipeline.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Configuration.RewriterConfiguration.ErrorHandlers">
+            <summary>
+            Dictionary of error handlers.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Configuration.RewriterConfiguration.Logger">
+            <summary>
+            Logger to use for logging information.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Configuration.RewriterConfiguration.DefaultDocuments">
+            <summary>
+            Collection of default document names to use if the result of a rewriting
+            is a directory name.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Configuration.RewriterConfiguration.XPoweredBy">
+            <summary>
+            Additional X-Powered-By header.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Configuration.RewriterConfiguration.ConfigurationManager">
+            <summary>
+            The configuration manager instance.
             </summary>
         </member>
         <member name="T:Intelligencia.UrlRewriter.RewriteContext">
@@ -128,9 +296,9 @@
             Last matching pattern from a match (if any).
             </summary>
         </member>
-        <member name="T:Intelligencia.UrlRewriter.Parsers.RedirectActionParser">
+        <member name="T:Intelligencia.UrlRewriter.Parsers.SetStatusActionParser">
             <summary>
-            Parser for redirect actions.
+            Action parser for the set-status action.
             </summary>
         </member>
         <member name="T:Intelligencia.UrlRewriter.Parsers.RewriteActionParserBase">
@@ -144,7 +312,7 @@
             IRewriteAction instance based on the node.
             </summary>
         </member>
-        <member name="M:Intelligencia.UrlRewriter.IRewriteActionParser.Parse(System.Xml.XmlNode,Intelligencia.UrlRewriter.Configuration.RewriterConfiguration)">
+        <member name="M:Intelligencia.UrlRewriter.IRewriteActionParser.Parse(System.Xml.XmlNode,Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration)">
             <summary>
             Parses the node if possible.  The parser may be called on an action node
             that it cannot parse, if it is registered on a common verb
@@ -170,7 +338,7 @@
             Whether the action allows attributes.
             </summary>
         </member>
-        <member name="M:Intelligencia.UrlRewriter.Parsers.RewriteActionParserBase.Parse(System.Xml.XmlNode,Intelligencia.UrlRewriter.Configuration.RewriterConfiguration)">
+        <member name="M:Intelligencia.UrlRewriter.Parsers.RewriteActionParserBase.Parse(System.Xml.XmlNode,Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration)">
             <summary>
             Parses the action.
             </summary>
@@ -178,7 +346,7 @@
             <param name="config">The rewriter configuration.</param>
             <returns>The parsed action, null if no action parsed.</returns>
         </member>
-        <member name="M:Intelligencia.UrlRewriter.Parsers.RewriteActionParserBase.ParseConditions(System.Xml.XmlNode,System.Collections.Generic.IList{Intelligencia.UrlRewriter.IRewriteCondition},System.Boolean,Intelligencia.UrlRewriter.Configuration.RewriterConfiguration)">
+        <member name="M:Intelligencia.UrlRewriter.Parsers.RewriteActionParserBase.ParseConditions(System.Xml.XmlNode,System.Collections.Generic.IList{Intelligencia.UrlRewriter.IRewriteCondition},System.Boolean,Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration)">
             <summary>
             Parses conditions from the node.
             </summary>
@@ -202,7 +370,7 @@
             Whether the action allows attributes.
             </summary>
         </member>
-        <member name="M:Intelligencia.UrlRewriter.Parsers.RedirectActionParser.Parse(System.Xml.XmlNode,Intelligencia.UrlRewriter.Configuration.RewriterConfiguration)">
+        <member name="M:Intelligencia.UrlRewriter.Parsers.SetStatusActionParser.Parse(System.Xml.XmlNode,Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration)">
             <summary>
             Parses the node.
             </summary>
@@ -210,297 +378,19 @@
             <param name="config">The rewriter configuration.</param>
             <returns>The parsed action, or null if no action parsed.</returns>
         </member>
-        <member name="P:Intelligencia.UrlRewriter.Parsers.RedirectActionParser.Name">
+        <member name="P:Intelligencia.UrlRewriter.Parsers.SetStatusActionParser.Name">
             <summary>
             The name of the action.
             </summary>
         </member>
-        <member name="P:Intelligencia.UrlRewriter.Parsers.RedirectActionParser.AllowsNestedActions">
+        <member name="P:Intelligencia.UrlRewriter.Parsers.SetStatusActionParser.AllowsNestedActions">
             <summary>
             Whether the action allows nested actions.
             </summary>
         </member>
-        <member name="P:Intelligencia.UrlRewriter.Parsers.RedirectActionParser.AllowsAttributes">
+        <member name="P:Intelligencia.UrlRewriter.Parsers.SetStatusActionParser.AllowsAttributes">
             <summary>
             Whether the action allows attributes.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Actions.SetLocationAction">
-            <summary>
-            Sets the Location.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.IRewriteAction">
-            <summary>
-            Interface for executable actions.  Actions must be thread-safe as there is a single
-            instance of each action.  This means that you must not make any changes to fields/properties
-            on the action once its created.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.IRewriteAction.Execute(Intelligencia.UrlRewriter.RewriteContext)">
-            <summary>
-            Executes the action.
-            </summary>
-            <remarks>
-            It is important to set the correct properties on the context
-            (e.g., StatusCode, Location), rather than directly implementing the action
-            (e.g., RewritePath).  This allows for the correct pipeline processing of
-            all the specified rules.
-            </remarks>
-            <returns>The Processing directive determines how the rewriter should continue
-            processing after this action has executed.</returns>
-            <param name="context">The context to execute the action on.</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Actions.SetLocationAction.#ctor(System.String)">
-            <summary>
-            Default constructor.
-            </summary>
-            <param name="location">The location (pattern) to set.</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Actions.SetLocationAction.Execute(Intelligencia.UrlRewriter.RewriteContext)">
-            <summary>
-            Executes the action.
-            </summary>
-            <param name="context">The rewriting context.</param>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Actions.SetLocationAction.Location">
-            <summary>
-            The location to set.  This can include replacements referencing the matched pattern,
-            for example $1, $2, ... $n and ${group} as well as ${ServerVariable} and mapping, e.g., 
-            ${MapName:$1}.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Parsers.AddHeaderActionParser">
-            <summary>
-            Action parser for the add-header action.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Parsers.AddHeaderActionParser.Parse(System.Xml.XmlNode,Intelligencia.UrlRewriter.Configuration.RewriterConfiguration)">
-            <summary>
-            Parses the node.
-            </summary>
-            <param name="node">The node to parse.</param>
-            <param name="config">The rewriter configuration.</param>
-            <returns>The parsed action, or null if no action parsed.</returns>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Parsers.AddHeaderActionParser.Name">
-            <summary>
-            The name of the action.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Parsers.AddHeaderActionParser.AllowsNestedActions">
-            <summary>
-            Whether the action allows nested actions.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Parsers.AddHeaderActionParser.AllowsAttributes">
-            <summary>
-            Whether the action allows attributes.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.FormRewriterControlAdapter">
-            <summary>
-            ControlAdapter for rewriting form actions
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.FormRewriterControlAdapter.Render(System.Web.UI.HtmlTextWriter)">
-            <summary>
-            Renders the control.
-            </summary>
-            <param name="writer">The writer to write to</param>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Actions.SetPropertyAction">
-            <summary>
-            Action that sets properties in the context.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Actions.SetPropertyAction.#ctor(System.String,System.String)">
-            <summary>
-            Default constructor.
-            </summary>
-            <param name="name">The name of the variable.</param>
-            <param name="value">The name of the value.</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Actions.SetPropertyAction.Execute(Intelligencia.UrlRewriter.RewriteContext)">
-            <summary>
-            Executes the action.
-            </summary>
-            <param name="context">The rewrite context.</param>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Actions.SetPropertyAction.Name">
-            <summary>
-            The name of the variable.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Actions.SetPropertyAction.Value">
-            <summary>
-            The value of the variable.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Actions.NotFoundAction">
-            <summary>
-            Returns a 404 Not Found HTTP status code.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Actions.SetStatusAction">
-            <summary>
-            Sets the StatusCode.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Actions.SetStatusAction.#ctor(System.Net.HttpStatusCode)">
-            <summary>
-            Default constructor.
-            </summary>
-            <param name="statusCode">The status code to set.</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Actions.SetStatusAction.Execute(Intelligencia.UrlRewriter.RewriteContext)">
-            <summary>
-            Executes the action.
-            </summary>
-            <param name="context">The rewriting context.</param>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Actions.SetStatusAction.StatusCode">
-            <summary>
-            The status code.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Actions.NotFoundAction.#ctor">
-            <summary>
-            Default constructor.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Utilities.IPRange">
-            <summary>
-            Represents a range of IP addresses.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Utilities.IPRange.#ctor(System.Net.IPAddress)">
-            <summary>
-            Constructor.
-            </summary>
-            <param name="address">A range of 1 IP address.</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Utilities.IPRange.#ctor(System.Net.IPAddress,System.Net.IPAddress)">
-            <summary>
-            Constructor.
-            </summary>
-            <param name="minimumAddress">Lowest IP address.</param>
-            <param name="maximumAddress">Highest IP address.</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Utilities.IPRange.Parse(System.String)">
-            <summary>
-            Parses an IP address range.
-            </summary>
-            <remarks>
-            ddd.ddd.ddd.ddd - single IP address
-            ddd.ddd.ddd.* - class C range
-            ddd.ddd.* - class B range
-            ddd.* - class A range
-            ddd.ddd.ddd.ddd - ccc.ccc.ccc.ccc - specific range
-            </remarks>
-            <param name="pattern">The pattern</param>
-            <returns>The IPRange instance.</returns>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Utilities.IPRange.InRange(System.Net.IPAddress)">
-            <summary>
-            Deteremines if the given IP address is in the range.
-            </summary>
-            <param name="address">The IP address.</param>
-            <returns>True if the address is in the range.</returns>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Utilities.IPRange.Compare(System.Net.IPAddress,System.Net.IPAddress)">
-            <summary>
-            Compares two IPAddresses.
-            Less than zero {left} is less than {right}.
-            Zero {left} equals {right}. 
-            Greater than zero {left} is greater than {right}. 
-            </summary>
-            <param name="left"></param>
-            <param name="right"></param>
-            <returns></returns>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Utilities.IPRange.MinimumAddress">
-            <summary>
-            Minimum address (inclusive).
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Utilities.IPRange.MaximumAddress">
-            <summary>
-            Maximum address (inclusive).
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Transforms.StaticMappingTransform">
-            <summary>
-            Default RewriteMapper, reads its maps from config.
-            The mapping is CASE-INSENSITIVE.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Transforms.StaticMappingTransform.#ctor(System.String,System.Collections.Specialized.StringDictionary)">
-            <summary>
-            Default constructor.
-            </summary>
-            <param name="name">The name of the mapping.</param>
-            <param name="map">The mappings.</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Transforms.StaticMappingTransform.ApplyTransform(System.String)">
-            <summary>
-            Maps the specified value in the specified map to its replacement value.
-            </summary>
-            <param name="input">The value being mapped.</param>
-            <returns>The value mapped to, or null if no mapping could be performed.</returns>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Transforms.StaticMappingTransform.Name">
-            <summary>
-            The name of the action.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Conditions.ExistsCondition">
-            <summary>
-            Condition that tests the existence of a file.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.IRewriteCondition">
-            <summary>
-            Interface for conditions.  Conditions must be thread-safe as there is a single
-            instance of each condition.  This means that you must not make any changes to fields/properties
-            on the condition once its created.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.IRewriteCondition.IsMatch(Intelligencia.UrlRewriter.RewriteContext)">
-            <summary>
-            Determines if the condition matches.
-            </summary>
-            <param name="context">The rewrite context.</param>
-            <returns>True if the condition is met.</returns>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Conditions.ExistsCondition.#ctor(System.String)">
-            <summary>
-            Constructor.
-            </summary>
-            <param name="location">The file location</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Conditions.ExistsCondition.IsMatch(Intelligencia.UrlRewriter.RewriteContext)">
-            <summary>
-            Determines if the condition is matched.
-            </summary>
-            <param name="context">The rewriting context.</param>
-            <returns>True if the condition is met.</returns>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Transforms.Base64Transform">
-            <summary>
-            Base 64 encodes the input.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Transforms.Base64Transform.ApplyTransform(System.String)">
-            <summary>
-            Applies a transformation to the input string.
-            </summary>
-            <param name="input">The input string.</param>
-            <returns>The transformed string.</returns>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Transforms.Base64Transform.Name">
-            <summary>
-            The name of the action.
             </summary>
         </member>
         <member name="T:Intelligencia.UrlRewriter.Parsers.PropertyMatchConditionParser">
@@ -531,61 +421,137 @@
             <param name="node">The node to parse.</param>
             <returns>The condition parsed, or null if nothing parsed.</returns>
         </member>
-        <member name="T:Intelligencia.UrlRewriter.Logging.IRewriteLogger">
-            <summary>
-            Interface for logging info from the Rewriter.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Logging.IRewriteLogger.Debug(System.Object)">
-            <summary>
-            Writes a debug message.
-            </summary>
-            <param name="message">The message to write.</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Logging.IRewriteLogger.Info(System.Object)">
-            <summary>
-            Writes an informational message.
-            </summary>
-            <param name="message">The message to write.</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Logging.IRewriteLogger.Warn(System.Object)">
-            <summary>
-            Writes a warning message.
-            </summary>
-            <param name="message">The message to write.</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Logging.IRewriteLogger.Error(System.Object)">
-            <summary>
-            Writes an error.
-            </summary>
-            <param name="message">The message to write.</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Logging.IRewriteLogger.Error(System.Object,System.Exception)">
-            <summary>
-            Writes an error.
-            </summary>
-            <param name="message">The message to write.</param>
-            <param name="exception">The exception</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Logging.IRewriteLogger.Fatal(System.Object,System.Exception)">
-            <summary>
-            Writes a fatal error.
-            </summary>
-            <param name="message">The message to write.</param>
-            <param name="exception">The exception</param>
-        </member>
         <member name="T:Intelligencia.UrlRewriter.Configuration.RewriterConfigurationReader">
             <summary>
             Reads configuration from an XML Node.
             </summary>
         </member>
-        <member name="M:Intelligencia.UrlRewriter.Configuration.RewriterConfigurationReader.Read(Intelligencia.UrlRewriter.Configuration.RewriterConfiguration,System.Xml.XmlNode)">
+        <member name="M:Intelligencia.UrlRewriter.Configuration.RewriterConfigurationReader.Read(Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration,System.Xml.XmlNode)">
             <summary>
             Reads configuration information from the given XML Node.
             </summary>
             <param name="config">The rewriter configuration object to populate.</param>
             <param name="section">The XML node to read configuration from.</param>
             <returns>The configuration information.</returns>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Conditions.NegativeCondition">
+            <summary>
+            Performs a negation of the given conditions.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.IRewriteCondition">
+            <summary>
+            Interface for conditions.  Conditions must be thread-safe as there is a single
+            instance of each condition.  This means that you must not make any changes to fields/properties
+            on the condition once its created.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.IRewriteCondition.IsMatch(Intelligencia.UrlRewriter.RewriteContext)">
+            <summary>
+            Determines if the condition matches.
+            </summary>
+            <param name="context">The rewrite context.</param>
+            <returns>True if the condition is met.</returns>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Conditions.NegativeCondition.#ctor(Intelligencia.UrlRewriter.IRewriteCondition)">
+            <summary>
+            Default constructor.
+            </summary>
+            <param name="chainedCondition"></param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Conditions.NegativeCondition.IsMatch(Intelligencia.UrlRewriter.RewriteContext)">
+            <summary>
+            Determines if the condition is matched.
+            </summary>
+            <param name="context">The rewriting context.</param>
+            <returns>True if the condition is met.</returns>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Actions.GoneAction">
+            <summary>
+            Returns a 410 Gone HTTP status code.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Actions.SetStatusAction">
+            <summary>
+            Sets the StatusCode.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.IRewriteAction">
+            <summary>
+            Interface for executable actions.  Actions must be thread-safe as there is a single
+            instance of each action.  This means that you must not make any changes to fields/properties
+            on the action once its created.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.IRewriteAction.Execute(Intelligencia.UrlRewriter.RewriteContext)">
+            <summary>
+            Executes the action.
+            </summary>
+            <remarks>
+            It is important to set the correct properties on the context
+            (e.g., StatusCode, Location), rather than directly implementing the action
+            (e.g., RewritePath).  This allows for the correct pipeline processing of
+            all the specified rules.
+            </remarks>
+            <returns>The Processing directive determines how the rewriter should continue
+            processing after this action has executed.</returns>
+            <param name="context">The context to execute the action on.</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Actions.SetStatusAction.#ctor(System.Net.HttpStatusCode)">
+            <summary>
+            Default constructor.
+            </summary>
+            <param name="statusCode">The status code to set.</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Actions.SetStatusAction.Execute(Intelligencia.UrlRewriter.RewriteContext)">
+            <summary>
+            Executes the action.
+            </summary>
+            <param name="context">The rewriting context.</param>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Actions.SetStatusAction.StatusCode">
+            <summary>
+            The status code.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Actions.GoneAction.#ctor">
+            <summary>
+            Default constructor.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Transforms.UpperTransform">
+            <summary>
+            Transforms the input to upper case.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Transforms.UpperTransform.ApplyTransform(System.String)">
+            <summary>
+            Applies a transformation to the input string.
+            </summary>
+            <param name="input">The input string.</param>
+            <returns>The transformed string.</returns>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Transforms.UpperTransform.Name">
+            <summary>
+            The name of the action.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Transforms.DecodeTransform">
+            <summary>
+            Url decodes the input.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Transforms.DecodeTransform.ApplyTransform(System.String)">
+            <summary>
+            Applies a transformation to the input string.
+            </summary>
+            <param name="input">The input string.</param>
+            <returns>The transformed string.</returns>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Transforms.DecodeTransform.Name">
+            <summary>
+            The name of the action.
+            </summary>
         </member>
         <member name="T:Intelligencia.UrlRewriter.Configuration.ActionParserFactory">
             <summary>
@@ -658,92 +624,30 @@
             The property name.
             </summary>
         </member>
-        <member name="T:Intelligencia.UrlRewriter.Actions.AddHeaderAction">
+        <member name="T:Intelligencia.UrlRewriter.Conditions.MethodCondition">
             <summary>
-            Action that adds a given header.
+            Matches on the current method.
             </summary>
         </member>
-        <member name="M:Intelligencia.UrlRewriter.Actions.AddHeaderAction.#ctor(System.String,System.String)">
-            <summary>
-            Default constructor.
-            </summary>
-            <param name="header">The header name.</param>
-            <param name="value">The header value.</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Actions.AddHeaderAction.Execute(Intelligencia.UrlRewriter.RewriteContext)">
-            <summary>
-            Executes the action.
-            </summary>
-            <param name="context">The rewrite context.</param>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Actions.AddHeaderAction.Header">
-            <summary>
-            The header name.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Actions.AddHeaderAction.Value">
-            <summary>
-            The header value.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Transforms.UpperTransform">
-            <summary>
-            Transforms the input to upper case.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Transforms.UpperTransform.ApplyTransform(System.String)">
-            <summary>
-            Applies a transformation to the input string.
-            </summary>
-            <param name="input">The input string.</param>
-            <returns>The transformed string.</returns>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Transforms.UpperTransform.Name">
-            <summary>
-            The name of the action.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Configuration.ConditionParserPipeline">
-            <summary>
-            Pipeline for creating the Condition parsers.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Configuration.ConditionParserPipeline.AddParser(System.String)">
-            <summary>
-            Adds a parser.
-            </summary>
-            <param name="parserType">The parser type.</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Configuration.ConditionParserPipeline.AddParser(Intelligencia.UrlRewriter.IRewriteConditionParser)">
-            <summary>
-            Adds a parser.
-            </summary>
-            <param name="parser">The parser.</param>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Conditions.AddressCondition">
-            <summary>
-            Matches on the current remote IP address.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Conditions.AddressCondition.#ctor(System.String)">
+        <member name="M:Intelligencia.UrlRewriter.Conditions.MethodCondition.#ctor(System.String)">
             <summary>
             Default constructor.
             </summary>
             <param name="pattern"></param>
         </member>
-        <member name="M:Intelligencia.UrlRewriter.Conditions.AddressCondition.IsMatch(Intelligencia.UrlRewriter.RewriteContext)">
+        <member name="M:Intelligencia.UrlRewriter.Conditions.MethodCondition.IsMatch(Intelligencia.UrlRewriter.RewriteContext)">
             <summary>
             Determines if the condition is matched.
             </summary>
             <param name="context">The rewriting context.</param>
             <returns>True if the condition is met.</returns>
         </member>
-        <member name="T:Intelligencia.UrlRewriter.Parsers.GoneActionParser">
+        <member name="T:Intelligencia.UrlRewriter.Parsers.SetAppSettingPropertyActionParser">
             <summary>
-            Parser for gone actions.
+            Action parser for the set-appsetting property action.
             </summary>
         </member>
-        <member name="M:Intelligencia.UrlRewriter.Parsers.GoneActionParser.Parse(System.Xml.XmlNode,Intelligencia.UrlRewriter.Configuration.RewriterConfiguration)">
+        <member name="M:Intelligencia.UrlRewriter.Parsers.SetAppSettingPropertyActionParser.Parse(System.Xml.XmlNode,Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration)">
             <summary>
             Parses the node.
             </summary>
@@ -751,68 +655,104 @@
             <param name="config">The rewriter configuration.</param>
             <returns>The parsed action, or null if no action parsed.</returns>
         </member>
-        <member name="P:Intelligencia.UrlRewriter.Parsers.GoneActionParser.Name">
+        <member name="P:Intelligencia.UrlRewriter.Parsers.SetAppSettingPropertyActionParser.Name">
             <summary>
             The name of the action.
             </summary>
         </member>
-        <member name="P:Intelligencia.UrlRewriter.Parsers.GoneActionParser.AllowsNestedActions">
+        <member name="P:Intelligencia.UrlRewriter.Parsers.SetAppSettingPropertyActionParser.AllowsNestedActions">
             <summary>
             Whether the action allows nested actions.
             </summary>
         </member>
-        <member name="P:Intelligencia.UrlRewriter.Parsers.GoneActionParser.AllowsAttributes">
+        <member name="P:Intelligencia.UrlRewriter.Parsers.SetAppSettingPropertyActionParser.AllowsAttributes">
             <summary>
             Whether the action allows attributes.
             </summary>
         </member>
-        <member name="T:Intelligencia.UrlRewriter.Parsers.ExistsConditionParser">
+        <member name="T:Intelligencia.UrlRewriter.Utilities.IPRange">
             <summary>
-            Parser for exists conditions.
+            Represents a range of IP addresses.
             </summary>
         </member>
-        <member name="M:Intelligencia.UrlRewriter.Parsers.ExistsConditionParser.Parse(System.Xml.XmlNode)">
+        <member name="M:Intelligencia.UrlRewriter.Utilities.IPRange.#ctor(System.Net.IPAddress)">
+            <summary>
+            Constructor.
+            </summary>
+            <param name="address">A range of 1 IP address.</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Utilities.IPRange.#ctor(System.Net.IPAddress,System.Net.IPAddress)">
+            <summary>
+            Constructor.
+            </summary>
+            <param name="minimumAddress">Lowest IP address.</param>
+            <param name="maximumAddress">Highest IP address.</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Utilities.IPRange.Parse(System.String)">
+            <summary>
+            Parses an IP address range.
+            </summary>
+            <remarks>
+            ddd.ddd.ddd.ddd - single IP address
+            ddd.ddd.ddd.* - class C range
+            ddd.ddd.* - class B range
+            ddd.* - class A range
+            ddd.ddd.ddd.ddd - ccc.ccc.ccc.ccc - specific range
+            </remarks>
+            <param name="pattern">The pattern</param>
+            <returns>The IPRange instance.</returns>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Utilities.IPRange.InRange(System.Net.IPAddress)">
+            <summary>
+            Deteremines if the given IP address is in the range.
+            </summary>
+            <param name="address">The IP address.</param>
+            <returns>True if the address is in the range.</returns>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Utilities.IPRange.Compare(System.Net.IPAddress,System.Net.IPAddress)">
+            <summary>
+            Compares two IPAddresses.
+            Less than zero {left} is less than {right}.
+            Zero {left} equals {right}. 
+            Greater than zero {left} is greater than {right}. 
+            </summary>
+            <param name="left"></param>
+            <param name="right"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Utilities.IPRange.MinimumAddress">
+            <summary>
+            Minimum address (inclusive).
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Utilities.IPRange.MaximumAddress">
+            <summary>
+            Maximum address (inclusive).
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Parsers.UrlMatchConditionParser">
+            <summary>
+            Parser for url match conditions.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Parsers.UrlMatchConditionParser.Parse(System.Xml.XmlNode)">
             <summary>
             Parses the condition.
             </summary>
             <param name="node">The node to parse.</param>
             <returns>The condition parsed, or null if nothing parsed.</returns>
         </member>
-        <member name="T:Intelligencia.UrlRewriter.Configuration.RewriterConfigurationSectionHandler">
+        <member name="T:Intelligencia.UrlRewriter.Parsers.MethodConditionParser">
             <summary>
-            Configuration section handler for the rewriter section.
+            Parser for method conditions.
             </summary>
         </member>
-        <member name="M:Intelligencia.UrlRewriter.Configuration.RewriterConfigurationSectionHandler.System#Configuration#IConfigurationSectionHandler#Create(System.Object,System.Object,System.Xml.XmlNode)">
+        <member name="M:Intelligencia.UrlRewriter.Parsers.MethodConditionParser.Parse(System.Xml.XmlNode)">
             <summary>
-            Creates the settings object.
+            Parses the condition.
             </summary>
-            <param name="parent">The parent node.</param>
-            <param name="configContext">The configuration context.</param>
-            <param name="section">The section.</param>
-            <returns>The settings object.</returns>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Utilities.Message">
-            <summary>
-            Message ids
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Transforms.LowerTransform">
-            <summary>
-            Transforms the input to lower case.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Transforms.LowerTransform.ApplyTransform(System.String)">
-            <summary>
-            Applies a transformation to the input string.
-            </summary>
-            <param name="input">The input string.</param>
-            <returns>The transformed string.</returns>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Transforms.LowerTransform.Name">
-            <summary>
-            The name of the action.
-            </summary>
+            <param name="node">The node to parse.</param>
+            <returns>The condition parsed, or null if nothing parsed.</returns>
         </member>
         <member name="T:Intelligencia.UrlRewriter.Form">
             <summary>
@@ -854,326 +794,6 @@
             <param name="writer">The output writer.</param>
             <exclude />
         </member>
-        <member name="T:Intelligencia.UrlRewriter.Errors.DefaultErrorHandler">
-            <summary>
-            The default error handler.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.IRewriteErrorHandler">
-            <summary>
-            Interface for rewriter error handlers.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.IRewriteErrorHandler.HandleError(System.Web.HttpContext)">
-            <summary>
-            Handles the error.
-            </summary>
-            <param name="context">The HTTP context.</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Errors.DefaultErrorHandler.#ctor(System.String)">
-            <summary>
-            Constructor.
-            </summary>
-            <param name="url">Url of the error page.</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Errors.DefaultErrorHandler.HandleError(System.Web.HttpContext)">
-            <summary>
-            Handles the error by rewriting to the error page url.
-            </summary>
-            <param name="context">The context.</param>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Actions.SetCookieAction">
-            <summary>
-            Action that sets a cookie.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Actions.SetCookieAction.#ctor(System.String,System.String)">
-            <summary>
-            Default constructor.
-            </summary>
-            <param name="cookieName">The cookie name.</param>
-            <param name="cookieValue">The cookie value.</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Actions.SetCookieAction.Execute(Intelligencia.UrlRewriter.RewriteContext)">
-            <summary>
-            Executes the action.
-            </summary>
-            <param name="context">The rewrite context.</param>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Actions.SetCookieAction.Name">
-            <summary>
-            The name of the variable.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Actions.SetCookieAction.Value">
-            <summary>
-            The value of the variable.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Actions.RedirectAction">
-            <summary>
-            Redirect using 302 temporary redirect.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Actions.RedirectAction.#ctor(System.String,System.Boolean)">
-            <summary>
-            Default constructor.
-            </summary>
-            <param name="location">The location to set.</param>
-            <param name="permanent">Whether the redirection is permanent.</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Actions.RedirectAction.Execute(Intelligencia.UrlRewriter.RewriteContext)">
-            <summary>
-            Executes the action.
-            </summary>
-            <param name="context">The rewriting context.</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Actions.RedirectAction.IsMatch(Intelligencia.UrlRewriter.RewriteContext)">
-            <summary>
-            Determines if the rewrite rule matches.
-            </summary>
-            <param name="context"></param>
-            <returns></returns>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Actions.RedirectAction.Conditions">
-            <summary>
-            Conditions that must hold for the rule to fire.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Parsers.NotAllowedActionParser">
-            <summary>
-            Parser for not allowed actions.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Parsers.NotAllowedActionParser.Parse(System.Xml.XmlNode,Intelligencia.UrlRewriter.Configuration.RewriterConfiguration)">
-            <summary>
-            Parses the node.
-            </summary>
-            <param name="node">The node to parse.</param>
-            <param name="config">The rewriter configuration.</param>
-            <returns>The parsed action, or null if no action parsed.</returns>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Parsers.NotAllowedActionParser.Name">
-            <summary>
-            The name of the action.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Parsers.NotAllowedActionParser.AllowsNestedActions">
-            <summary>
-            Whether the action allows nested actions.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Parsers.NotAllowedActionParser.AllowsAttributes">
-            <summary>
-            Whether the action allows attributes.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Conditions.NegativeCondition">
-            <summary>
-            Performs a negation of the given conditions.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Conditions.NegativeCondition.#ctor(Intelligencia.UrlRewriter.IRewriteCondition)">
-            <summary>
-            Default constructor.
-            </summary>
-            <param name="chainedCondition"></param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Conditions.NegativeCondition.IsMatch(Intelligencia.UrlRewriter.RewriteContext)">
-            <summary>
-            Determines if the condition is matched.
-            </summary>
-            <param name="context">The rewriting context.</param>
-            <returns>True if the condition is met.</returns>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Utilities.TypeHelper">
-            <summary>
-            Helper class for dealing with types.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Utilities.TypeHelper.Activate(System.String,System.Object[])">
-            <summary>
-            Loads and activates a type
-            </summary>
-            <param name="fullTypeName">The full name of the type to activate "TypeName, AssemblyName"</param>
-            <param name="args">Arguments to pass to the constructor</param>
-            <returns>The object</returns>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Utilities.TypeHelper.Activate(System.String,System.String,System.Object[])">
-            <summary>
-            Loads and activates a type
-            </summary>
-            <param name="assemblyName">The assembly name</param>
-            <param name="typeName">The type name</param>
-            <param name="args">Arguments to pass to the constructor</param>
-            <returns>The object</returns>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.RewriteProcessing">
-            <summary>
-            Processing flag. Tells the rewriter how to continue processing (or not).
-            </summary>
-        </member>
-        <member name="F:Intelligencia.UrlRewriter.RewriteProcessing.ContinueProcessing">
-            <summary>
-            Continue processing at the next rule.
-            </summary>
-        </member>
-        <member name="F:Intelligencia.UrlRewriter.RewriteProcessing.StopProcessing">
-            <summary>
-            Halt processing.
-            </summary>
-        </member>
-        <member name="F:Intelligencia.UrlRewriter.RewriteProcessing.RestartProcessing">
-            <summary>
-            Restart processing at the first rule.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Parsers.UrlMatchConditionParser">
-            <summary>
-            Parser for url match conditions.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Parsers.UrlMatchConditionParser.Parse(System.Xml.XmlNode)">
-            <summary>
-            Parses the condition.
-            </summary>
-            <param name="node">The node to parse.</param>
-            <returns>The condition parsed, or null if nothing parsed.</returns>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Actions.RewriteAction">
-            <summary>
-            Rewrites in-place.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Actions.RewriteAction.#ctor(System.String,Intelligencia.UrlRewriter.RewriteProcessing)">
-            <summary>
-            Default constructor.
-            </summary>
-            <param name="location">The location to set.</param>
-            <param name="processing">The processing directive.</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Actions.RewriteAction.Execute(Intelligencia.UrlRewriter.RewriteContext)">
-            <summary>
-            Executes the action.
-            </summary>
-            <param name="context">The rewrite context.</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Actions.RewriteAction.IsMatch(Intelligencia.UrlRewriter.RewriteContext)">
-            <summary>
-            Determines if the rewrite rule matches.
-            </summary>
-            <param name="context"></param>
-            <returns></returns>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Actions.RewriteAction.Conditions">
-            <summary>
-            Conditions that must hold for the rule to fire.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Parsers.SetStatusActionParser">
-            <summary>
-            Action parser for the set-status action.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Parsers.SetStatusActionParser.Parse(System.Xml.XmlNode,Intelligencia.UrlRewriter.Configuration.RewriterConfiguration)">
-            <summary>
-            Parses the node.
-            </summary>
-            <param name="node">The node to parse.</param>
-            <param name="config">The rewriter configuration.</param>
-            <returns>The parsed action, or null if no action parsed.</returns>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Parsers.SetStatusActionParser.Name">
-            <summary>
-            The name of the action.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Parsers.SetStatusActionParser.AllowsNestedActions">
-            <summary>
-            Whether the action allows nested actions.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Parsers.SetStatusActionParser.AllowsAttributes">
-            <summary>
-            Whether the action allows attributes.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Parsers.AddressConditionParser">
-            <summary>
-            Parser for address conditions.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Parsers.AddressConditionParser.Parse(System.Xml.XmlNode)">
-            <summary>
-            Parses the condition.
-            </summary>
-            <param name="node">The node to parse.</param>
-            <returns>The condition parsed, or null if nothing parsed.</returns>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Configuration.TransformFactory">
-            <summary>
-            Factory for creating transforms.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Configuration.TransformFactory.AddTransform(System.String)">
-            <summary>
-            Adds a transform.
-            </summary>
-            <param name="transformType">The type of the transform.</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Configuration.TransformFactory.AddTransform(Intelligencia.UrlRewriter.IRewriteTransform)">
-            <summary>
-            Adds a transform.
-            </summary>
-            <param name="transform">The transform object.</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Configuration.TransformFactory.GetTransform(System.String)">
-            <summary>
-            Gets a transform by name.
-            </summary>
-            <param name="name">The transform name.</param>
-            <returns>The transform object.</returns>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Actions.ConditionalAction">
-            <summary>
-            A Conditional Action
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Actions.ConditionalAction.IsMatch(Intelligencia.UrlRewriter.RewriteContext)">
-            <summary>
-            Determines if the action matches the current context.
-            </summary>
-            <param name="context">The context to match on.</param>
-            <returns>True if the condition matches.</returns>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Actions.ConditionalAction.Execute(Intelligencia.UrlRewriter.RewriteContext)">
-            <summary>
-            Executes the rule.
-            </summary>
-            <param name="context">The rewrite context</param>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Actions.ConditionalAction.Conditions">
-            <summary>
-            Conditions that must hold for the rule to fire.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Actions.ConditionalAction.Actions">
-            <summary>
-            Child rules.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Parsers.HeaderMatchConditionParser">
-            <summary>
-            Parser for header match conditions.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Parsers.HeaderMatchConditionParser.Parse(System.Xml.XmlNode)">
-            <summary>
-            Parses the condition.
-            </summary>
-            <param name="node">The node to parse.</param>
-            <returns>The condition parsed, or null if nothing parsed.</returns>
-        </member>
         <member name="T:Intelligencia.UrlRewriter.Conditions.UrlMatchCondition">
             <summary>
             Matches on the current URL.
@@ -1197,98 +817,27 @@
             The pattern to match.
             </summary>
         </member>
-        <member name="T:Intelligencia.UrlRewriter.Utilities.Constants">
+        <member name="T:Intelligencia.UrlRewriter.Utilities.TypeHelper">
             <summary>
-            Constants for the parser.
+            Helper class for dealing with types.
             </summary>
         </member>
-        <member name="T:Intelligencia.UrlRewriter.Transforms.DecodeTransform">
+        <member name="M:Intelligencia.UrlRewriter.Utilities.TypeHelper.Activate(System.String,System.Object[])">
             <summary>
-            Url decodes the input.
+            Loads and activates a type
             </summary>
+            <param name="fullTypeName">The full name of the type to activate "TypeName, AssemblyName"</param>
+            <param name="args">Arguments to pass to the constructor</param>
+            <returns>The object</returns>
         </member>
-        <member name="M:Intelligencia.UrlRewriter.Transforms.DecodeTransform.ApplyTransform(System.String)">
+        <member name="M:Intelligencia.UrlRewriter.Utilities.TypeHelper.Activate(System.String,System.String,System.Object[])">
             <summary>
-            Applies a transformation to the input string.
+            Loads and activates a type
             </summary>
-            <param name="input">The input string.</param>
-            <returns>The transformed string.</returns>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Transforms.DecodeTransform.Name">
-            <summary>
-            The name of the action.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.RewriterHttpModule">
-            <summary>
-            Main HTTP Module for the URL Rewriter.
-            Rewrites URL's based on patterns and conditions specified in the configuration file.
-            This class cannot be inherited.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.RewriterHttpModule.System#Web#IHttpModule#Init(System.Web.HttpApplication)">
-            <summary>
-            Initialises the module.
-            </summary>
-            <param name="context">The application context.</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.RewriterHttpModule.System#Web#IHttpModule#Dispose">
-            <summary>
-            Disposes of the module.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.RewriterHttpModule.BeginRequest(System.Object,System.EventArgs)">
-            <summary>
-            Event handler for the "BeginRequest" event.
-            </summary>
-            <param name="sender">The sender object</param>
-            <param name="e">Event args</param>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.RewriterHttpModule.RawUrl">
-            <summary>
-            The raw URL for the current request, before any rewriting.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Conditions.MethodCondition">
-            <summary>
-            Matches on the current method.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Conditions.MethodCondition.#ctor(System.String)">
-            <summary>
-            Default constructor.
-            </summary>
-            <param name="pattern"></param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Conditions.MethodCondition.IsMatch(Intelligencia.UrlRewriter.RewriteContext)">
-            <summary>
-            Determines if the condition is matched.
-            </summary>
-            <param name="context">The rewriting context.</param>
-            <returns>True if the condition is met.</returns>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Actions.MethodNotAllowedAction">
-            <summary>
-            Returns a 405 Method Not Allowed HTTP status code.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Actions.MethodNotAllowedAction.#ctor">
-            <summary>
-            Default constructor.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Utilities.MessageProvider">
-            <summary>
-            Message provider.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Utilities.MessageProvider.FormatString(Intelligencia.UrlRewriter.Utilities.Message,System.Object[])">
-            <summary>
-            Formats a string.
-            </summary>
-            <param name="message">The message ID</param>
-            <param name="args">The arguments</param>
-            <returns>The formatted string</returns>
+            <param name="assemblyName">The assembly name</param>
+            <param name="typeName">The type name</param>
+            <param name="args">Arguments to pass to the constructor</param>
+            <returns>The object</returns>
         </member>
         <member name="T:Intelligencia.UrlRewriter.Utilities.HttpContextFacade">
             <summary>
@@ -1497,12 +1046,29 @@
             Gets a collection of request cookies.
             </summary>
         </member>
+        <member name="T:Intelligencia.UrlRewriter.Transforms.LowerTransform">
+            <summary>
+            Transforms the input to lower case.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Transforms.LowerTransform.ApplyTransform(System.String)">
+            <summary>
+            Applies a transformation to the input string.
+            </summary>
+            <param name="input">The input string.</param>
+            <returns>The transformed string.</returns>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Transforms.LowerTransform.Name">
+            <summary>
+            The name of the action.
+            </summary>
+        </member>
         <member name="T:Intelligencia.UrlRewriter.Parsers.RewriteActionParser">
             <summary>
             Parser for rewrite actions.
             </summary>
         </member>
-        <member name="M:Intelligencia.UrlRewriter.Parsers.RewriteActionParser.Parse(System.Xml.XmlNode,Intelligencia.UrlRewriter.Configuration.RewriterConfiguration)">
+        <member name="M:Intelligencia.UrlRewriter.Parsers.RewriteActionParser.Parse(System.Xml.XmlNode,Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration)">
             <summary>
             Parses the node.
             </summary>
@@ -1525,12 +1091,998 @@
             Whether the action allows attributes.
             </summary>
         </member>
+        <member name="T:Intelligencia.UrlRewriter.Parsers.NotAllowedActionParser">
+            <summary>
+            Parser for not allowed actions.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Parsers.NotAllowedActionParser.Parse(System.Xml.XmlNode,Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration)">
+            <summary>
+            Parses the node.
+            </summary>
+            <param name="node">The node to parse.</param>
+            <param name="config">The rewriter configuration.</param>
+            <returns>The parsed action, or null if no action parsed.</returns>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Parsers.NotAllowedActionParser.Name">
+            <summary>
+            The name of the action.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Parsers.NotAllowedActionParser.AllowsNestedActions">
+            <summary>
+            Whether the action allows nested actions.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Parsers.NotAllowedActionParser.AllowsAttributes">
+            <summary>
+            Whether the action allows attributes.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Transforms.EncodeTransform">
+            <summary>
+            Url encodes the input.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Transforms.EncodeTransform.ApplyTransform(System.String)">
+            <summary>
+            Applies a transformation to the input string.
+            </summary>
+            <param name="input">The input string.</param>
+            <returns>The transformed string.</returns>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Transforms.EncodeTransform.Name">
+            <summary>
+            The name of the action.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Parsers.SetCookieActionParser">
+            <summary>
+            Action parser for the set-cookie action.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Parsers.SetCookieActionParser.Parse(System.Xml.XmlNode,Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration)">
+            <summary>
+            Parses the node.
+            </summary>
+            <param name="node">The node to parse.</param>
+            <param name="config">The rewriter configuration.</param>
+            <returns>The parsed action, or null if no action parsed.</returns>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Parsers.SetCookieActionParser.Name">
+            <summary>
+            The name of the action.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Parsers.SetCookieActionParser.AllowsNestedActions">
+            <summary>
+            Whether the action allows nested actions.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Parsers.SetCookieActionParser.AllowsAttributes">
+            <summary>
+            Whether the action allows attributes.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.IRewriteErrorHandler">
+            <summary>
+            Interface for rewriter error handlers.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.IRewriteErrorHandler.HandleError(System.Web.HttpContext)">
+            <summary>
+            Handles the error.
+            </summary>
+            <param name="context">The HTTP context.</param>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Actions.AddHeaderAction">
+            <summary>
+            Action that adds a given header.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Actions.AddHeaderAction.#ctor(System.String,System.String)">
+            <summary>
+            Default constructor.
+            </summary>
+            <param name="header">The header name.</param>
+            <param name="value">The header value.</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Actions.AddHeaderAction.Execute(Intelligencia.UrlRewriter.RewriteContext)">
+            <summary>
+            Executes the action.
+            </summary>
+            <param name="context">The rewrite context.</param>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Actions.AddHeaderAction.Header">
+            <summary>
+            The header name.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Actions.AddHeaderAction.Value">
+            <summary>
+            The header value.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Utilities.Constants">
+            <summary>
+            Constants for the parser.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Transforms.Base64DecodeTransform">
+            <summary>
+            Base 64 encodes the input.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Transforms.Base64DecodeTransform.ApplyTransform(System.String)">
+            <summary>
+            Applies a transformation to the input string.
+            </summary>
+            <param name="input">The input string.</param>
+            <returns>The transformed string.</returns>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Transforms.Base64DecodeTransform.Name">
+            <summary>
+            The name of the action.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Parsers.GoneActionParser">
+            <summary>
+            Parser for gone actions.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Parsers.GoneActionParser.Parse(System.Xml.XmlNode,Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration)">
+            <summary>
+            Parses the node.
+            </summary>
+            <param name="node">The node to parse.</param>
+            <param name="config">The rewriter configuration.</param>
+            <returns>The parsed action, or null if no action parsed.</returns>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Parsers.GoneActionParser.Name">
+            <summary>
+            The name of the action.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Parsers.GoneActionParser.AllowsNestedActions">
+            <summary>
+            Whether the action allows nested actions.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Parsers.GoneActionParser.AllowsAttributes">
+            <summary>
+            Whether the action allows attributes.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Parsers.ForbiddenActionParser">
+            <summary>
+            Parser for forbidden actions.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Parsers.ForbiddenActionParser.Parse(System.Xml.XmlNode,Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration)">
+            <summary>
+            Parses the node.
+            </summary>
+            <param name="node">The node to parse.</param>
+            <param name="config">The rewriter configuration.</param>
+            <returns>The parsed action, or null if no action parsed.</returns>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Parsers.ForbiddenActionParser.Name">
+            <summary>
+            The name of the action.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Parsers.ForbiddenActionParser.AllowsNestedActions">
+            <summary>
+            Whether the action allows nested actions.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Parsers.ForbiddenActionParser.AllowsAttributes">
+            <summary>
+            Whether the action allows attributes.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Actions.NotFoundAction">
+            <summary>
+            Returns a 404 Not Found HTTP status code.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Actions.NotFoundAction.#ctor">
+            <summary>
+            Default constructor.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Utilities.Message">
+            <summary>
+            Message ids
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Parsers.NotFoundActionParser">
+            <summary>
+            Parser for not found actions.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Parsers.NotFoundActionParser.Parse(System.Xml.XmlNode,Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration)">
+            <summary>
+            Parses the node.
+            </summary>
+            <param name="node">The node to parse.</param>
+            <param name="config">The rewriter configuration.</param>
+            <returns>The parsed action, or null if no action parsed.</returns>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Parsers.NotFoundActionParser.Name">
+            <summary>
+            The name of the action.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Parsers.NotFoundActionParser.AllowsNestedActions">
+            <summary>
+            Whether the action allows nested actions.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Parsers.NotFoundActionParser.AllowsAttributes">
+            <summary>
+            Whether the action allows attributes.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Parsers.AddressConditionParser">
+            <summary>
+            Parser for address conditions.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Parsers.AddressConditionParser.Parse(System.Xml.XmlNode)">
+            <summary>
+            Parses the condition.
+            </summary>
+            <param name="node">The node to parse.</param>
+            <returns>The condition parsed, or null if nothing parsed.</returns>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Configuration.TransformFactory">
+            <summary>
+            Factory for creating transforms.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Configuration.TransformFactory.AddTransform(System.String)">
+            <summary>
+            Adds a transform.
+            </summary>
+            <param name="transformType">The type of the transform.</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Configuration.TransformFactory.AddTransform(Intelligencia.UrlRewriter.IRewriteTransform)">
+            <summary>
+            Adds a transform.
+            </summary>
+            <param name="transform">The transform object.</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Configuration.TransformFactory.GetTransform(System.String)">
+            <summary>
+            Gets a transform by name.
+            </summary>
+            <param name="name">The transform name.</param>
+            <returns>The transform object.</returns>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.FormRewriterControlAdapter">
+            <summary>
+            ControlAdapter for rewriting form actions
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.FormRewriterControlAdapter.Render(System.Web.UI.HtmlTextWriter)">
+            <summary>
+            Renders the control.
+            </summary>
+            <param name="writer">The writer to write to</param>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Configuration.ConfigurationManagerFacade">
+            <summary>
+            A naive pass-through implementation of the IConfigurationManager facade that proxys calls to the
+            ASP.NET ConfigurationManager.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Configuration.IConfigurationManager">
+            <summary>
+            Interface for a facade to the ASP.NET ConfigurationManager.
+            Useful for plugging out the ConfigurationManager in unit tests.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Configuration.IConfigurationManager.GetSection(System.String)">
+            <summary>
+            Retrieves a configuration section from the web application's config file.
+            </summary>
+            <param name="sectionName">The configuration section name</param>
+            <returns>The configuration section class instance</returns>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Configuration.IConfigurationManager.AppSettings">
+            <summary>
+            Gets the AppSettings from the web application's config file.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Configuration.ConfigurationManagerFacade.GetSection(System.String)">
+            <summary>
+            Retrieves a configuration section from the web application's config file.
+            </summary>
+            <param name="sectionName">The configuration section name</param>
+            <returns>The configuration section class instance</returns>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Configuration.ConfigurationManagerFacade.AppSettings">
+            <summary>
+            Gets the AppSettings from the web application's config file.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Actions.NotImplementedAction">
+            <summary>
+            Returns a 501 Not Implemented HTTP status code.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Actions.NotImplementedAction.#ctor">
+            <summary>
+            Default constructor.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Actions.ConditionalAction">
+            <summary>
+            A Conditional Action
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Actions.ConditionalAction.IsMatch(Intelligencia.UrlRewriter.RewriteContext)">
+            <summary>
+            Determines if the action matches the current context.
+            </summary>
+            <param name="context">The context to match on.</param>
+            <returns>True if the condition matches.</returns>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Actions.ConditionalAction.Execute(Intelligencia.UrlRewriter.RewriteContext)">
+            <summary>
+            Executes the rule.
+            </summary>
+            <param name="context">The rewrite context</param>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Actions.ConditionalAction.Conditions">
+            <summary>
+            Conditions that must hold for the rule to fire.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Actions.ConditionalAction.Actions">
+            <summary>
+            Child rules.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Parsers.AddHeaderActionParser">
+            <summary>
+            Action parser for the add-header action.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Parsers.AddHeaderActionParser.Parse(System.Xml.XmlNode,Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration)">
+            <summary>
+            Parses the node.
+            </summary>
+            <param name="node">The node to parse.</param>
+            <param name="config">The rewriter configuration.</param>
+            <returns>The parsed action, or null if no action parsed.</returns>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Parsers.AddHeaderActionParser.Name">
+            <summary>
+            The name of the action.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Parsers.AddHeaderActionParser.AllowsNestedActions">
+            <summary>
+            Whether the action allows nested actions.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Parsers.AddHeaderActionParser.AllowsAttributes">
+            <summary>
+            Whether the action allows attributes.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Logging.DebugLogger">
+            <summary>
+            A logger which writes out to the Debug window.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Logging.IRewriteLogger">
+            <summary>
+            Interface for logging info from the Rewriter.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Logging.IRewriteLogger.Debug(System.Object)">
+            <summary>
+            Writes a debug message.
+            </summary>
+            <param name="message">The message to write.</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Logging.IRewriteLogger.Info(System.Object)">
+            <summary>
+            Writes an informational message.
+            </summary>
+            <param name="message">The message to write.</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Logging.IRewriteLogger.Warn(System.Object)">
+            <summary>
+            Writes a warning message.
+            </summary>
+            <param name="message">The message to write.</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Logging.IRewriteLogger.Error(System.Object)">
+            <summary>
+            Writes an error.
+            </summary>
+            <param name="message">The message to write.</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Logging.IRewriteLogger.Error(System.Object,System.Exception)">
+            <summary>
+            Writes an error.
+            </summary>
+            <param name="message">The message to write.</param>
+            <param name="exception">The exception</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Logging.IRewriteLogger.Fatal(System.Object,System.Exception)">
+            <summary>
+            Writes a fatal error.
+            </summary>
+            <param name="message">The message to write.</param>
+            <param name="exception">The exception</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Logging.DebugLogger.Debug(System.Object)">
+            <summary>
+            Writes a debug message.
+            </summary>
+            <param name="message">The message to write.</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Logging.DebugLogger.Info(System.Object)">
+            <summary>
+            Writes an informational message.
+            </summary>
+            <param name="message">The message to write.</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Logging.DebugLogger.Warn(System.Object)">
+            <summary>
+            Writes a warning message.
+            </summary>
+            <param name="message">The message to write.</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Logging.DebugLogger.Error(System.Object)">
+            <summary>
+            Writes an error.
+            </summary>
+            <param name="message">The message to write.</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Logging.DebugLogger.Error(System.Object,System.Exception)">
+            <summary>
+            Writes an error.
+            </summary>
+            <param name="message">The message to write.</param>
+            <param name="exception">The exception</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Logging.DebugLogger.Fatal(System.Object,System.Exception)">
+            <summary>
+            Writes a fatal error.
+            </summary>
+            <param name="message">The message to write.</param>
+            <param name="exception">The exception</param>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Conditions.ExistsCondition">
+            <summary>
+            Condition that tests the existence of a file.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Conditions.ExistsCondition.#ctor(System.String)">
+            <summary>
+            Constructor.
+            </summary>
+            <param name="location">The file location</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Conditions.ExistsCondition.IsMatch(Intelligencia.UrlRewriter.RewriteContext)">
+            <summary>
+            Determines if the condition is matched.
+            </summary>
+            <param name="context">The rewriting context.</param>
+            <returns>True if the condition is met.</returns>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Actions.SetCookieAction">
+            <summary>
+            Action that sets a cookie.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Actions.SetCookieAction.#ctor(System.String,System.String)">
+            <summary>
+            Default constructor.
+            </summary>
+            <param name="cookieName">The cookie name.</param>
+            <param name="cookieValue">The cookie value.</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Actions.SetCookieAction.Execute(Intelligencia.UrlRewriter.RewriteContext)">
+            <summary>
+            Executes the action.
+            </summary>
+            <param name="context">The rewrite context.</param>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Actions.SetCookieAction.Name">
+            <summary>
+            The name of the variable.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Actions.SetCookieAction.Value">
+            <summary>
+            The value of the variable.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.RewriteProcessing">
+            <summary>
+            Processing flag. Tells the rewriter how to continue processing (or not).
+            </summary>
+        </member>
+        <member name="F:Intelligencia.UrlRewriter.RewriteProcessing.ContinueProcessing">
+            <summary>
+            Continue processing at the next rule.
+            </summary>
+        </member>
+        <member name="F:Intelligencia.UrlRewriter.RewriteProcessing.StopProcessing">
+            <summary>
+            Halt processing.
+            </summary>
+        </member>
+        <member name="F:Intelligencia.UrlRewriter.RewriteProcessing.RestartProcessing">
+            <summary>
+            Restart processing at the first rule.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Parsers.SetPropertyActionParser">
+            <summary>
+            Action parser for the set-property action.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Parsers.SetPropertyActionParser.Parse(System.Xml.XmlNode,Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration)">
+            <summary>
+            Parses the node.
+            </summary>
+            <param name="node">The node to parse.</param>
+            <param name="config">The rewriter configuration.</param>
+            <returns>The parsed action, or null if no action parsed.</returns>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Parsers.SetPropertyActionParser.Name">
+            <summary>
+            The name of the action.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Parsers.SetPropertyActionParser.AllowsNestedActions">
+            <summary>
+            Whether the action allows nested actions.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Parsers.SetPropertyActionParser.AllowsAttributes">
+            <summary>
+            Whether the action allows attributes.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Parsers.RedirectActionParser">
+            <summary>
+            Parser for redirect actions.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Parsers.RedirectActionParser.Parse(System.Xml.XmlNode,Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration)">
+            <summary>
+            Parses the node.
+            </summary>
+            <param name="node">The node to parse.</param>
+            <param name="config">The rewriter configuration.</param>
+            <returns>The parsed action, or null if no action parsed.</returns>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Parsers.RedirectActionParser.Name">
+            <summary>
+            The name of the action.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Parsers.RedirectActionParser.AllowsNestedActions">
+            <summary>
+            Whether the action allows nested actions.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Parsers.RedirectActionParser.AllowsAttributes">
+            <summary>
+            Whether the action allows attributes.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Logging.TraceLogger">
+            <summary>
+            A logger which writes to Trace, which may be read by a Trace Listener.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Logging.TraceLogger.Debug(System.Object)">
+            <summary>
+            Writes a debug message.
+            </summary>
+            <param name="message">The message to write.</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Logging.TraceLogger.Info(System.Object)">
+            <summary>
+            Writes an informational message.
+            </summary>
+            <param name="message">The message to write.</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Logging.TraceLogger.Warn(System.Object)">
+            <summary>
+            Writes a warning message.
+            </summary>
+            <param name="message">The message to write.</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Logging.TraceLogger.Error(System.Object)">
+            <summary>
+            Writes an error.
+            </summary>
+            <param name="message">The message to write.</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Logging.TraceLogger.Error(System.Object,System.Exception)">
+            <summary>
+            Writes an error.
+            </summary>
+            <param name="message">The message to write.</param>
+            <param name="exception">The exception</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Logging.TraceLogger.Fatal(System.Object,System.Exception)">
+            <summary>
+            Writes a fatal error.
+            </summary>
+            <param name="message">The message to write.</param>
+            <param name="exception">The exception</param>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Actions.MethodNotAllowedAction">
+            <summary>
+            Returns a 405 Method Not Allowed HTTP status code.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Actions.MethodNotAllowedAction.#ctor">
+            <summary>
+            Default constructor.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Utilities.MessageProvider">
+            <summary>
+            Message provider.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Utilities.MessageProvider.FormatString(Intelligencia.UrlRewriter.Utilities.Message,System.Object[])">
+            <summary>
+            Formats a string.
+            </summary>
+            <param name="message">The message ID</param>
+            <param name="args">The arguments</param>
+            <returns>The formatted string</returns>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Parsers.IfConditionActionParser">
+            <summary>
+            Parses the IF node.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Parsers.IfConditionActionParser.Parse(System.Xml.XmlNode,Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration)">
+            <summary>
+            Parses the action.
+            </summary>
+            <param name="node">The node to parse.</param>
+            <param name="config">The rewriter configuration.</param>
+            <returns>The parsed action, null if no action parsed.</returns>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Parsers.IfConditionActionParser.Name">
+            <summary>
+            The name of the action.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Parsers.IfConditionActionParser.AllowsNestedActions">
+            <summary>
+            Whether the action allows nested actions.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Parsers.IfConditionActionParser.AllowsAttributes">
+            <summary>
+            Whether the action allows attributes.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Configuration.RewriterConfigurationSectionHandler">
+            <summary>
+            Configuration section handler for the rewriter section.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Configuration.RewriterConfigurationSectionHandler.System#Configuration#IConfigurationSectionHandler#Create(System.Object,System.Object,System.Xml.XmlNode)">
+            <summary>
+            Creates the settings object.
+            </summary>
+            <param name="parent">The parent node.</param>
+            <param name="configContext">The configuration context.</param>
+            <param name="section">The section.</param>
+            <returns>The settings object.</returns>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Parsers.HeaderMatchConditionParser">
+            <summary>
+            Parser for header match conditions.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Parsers.HeaderMatchConditionParser.Parse(System.Xml.XmlNode)">
+            <summary>
+            Parses the condition.
+            </summary>
+            <param name="node">The node to parse.</param>
+            <returns>The condition parsed, or null if nothing parsed.</returns>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.RewriteFormHtmlTextWriter">
+            <summary>
+            The HTML Text Writer to use for rewriting form actions.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.RewriteFormHtmlTextWriter.#ctor(System.Web.UI.HtmlTextWriter)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="writer">The writer to use.</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.RewriteFormHtmlTextWriter.WriteAttribute(System.String,System.String,System.Boolean)">
+            <summary>
+            Writes an attribute
+            </summary>
+            <param name="name">Name of the attribute</param>
+            <param name="value">Value of the attribute</param>
+            <param name="fEncode"></param>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.XmlNodeExtensions">
+            <summary>
+            Extension methods for the XmlNode class.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.XmlNodeExtensions.GetRequiredAttribute(System.Xml.XmlNode,System.String)">
+            <summary>
+            Gets a required attribute from an XML node.
+            Throws an error if the required attribute is missing or empty (blank).
+            </summary>
+            <param name="node">The XML node</param>
+            <param name="attributeName">The XML attribute name</param>
+            <returns>The attribute value</returns>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.XmlNodeExtensions.GetRequiredAttribute(System.Xml.XmlNode,System.String,System.Boolean)">
+            <summary>
+            Gets a required attribute from an XML node.
+            Throws an error if the required attribute is missing.
+            Throws an error if the required attribute is empty (blank) and allowBlank is set to false.
+            or empty (blank).
+            </summary>
+            <param name="node">The XML node</param>
+            <param name="attributeName">The XML attribute name</param>
+            <param name="allowBlank">Blank (empty) values okay?</param>
+            <returns>The attribute value</returns>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Actions.SetAppSettingPropertyAction">
+            <summary>
+            Action that sets a property in the context from AppSettings, i.e the appSettings collection
+            in web.config.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Actions.SetAppSettingPropertyAction.#ctor(System.String,System.String)">
+            <summary>
+            Default constructor.
+            </summary>
+            <param name="name">The name of the variable.</param>
+            <param name="appSettingsKey">The name of the key in AppSettings.</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Actions.SetAppSettingPropertyAction.Execute(Intelligencia.UrlRewriter.RewriteContext)">
+            <summary>
+            Executes the action.
+            </summary>
+            <param name="context">The rewrite context.</param>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Actions.SetAppSettingPropertyAction.Name">
+            <summary>
+            The name of the variable.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Actions.SetAppSettingPropertyAction.AppSettingKey">
+            <summary>
+            The name of the key in AppSettings.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Errors.DefaultErrorHandler">
+            <summary>
+            The default error handler.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Errors.DefaultErrorHandler.#ctor(System.String)">
+            <summary>
+            Constructor.
+            </summary>
+            <param name="url">Url of the error page.</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Errors.DefaultErrorHandler.HandleError(System.Web.HttpContext)">
+            <summary>
+            Handles the error by rewriting to the error page url.
+            </summary>
+            <param name="context">The context.</param>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Conditions.AddressCondition">
+            <summary>
+            Matches on the current remote IP address.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Conditions.AddressCondition.#ctor(System.String)">
+            <summary>
+            Default constructor.
+            </summary>
+            <param name="pattern"></param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Conditions.AddressCondition.IsMatch(Intelligencia.UrlRewriter.RewriteContext)">
+            <summary>
+            Determines if the condition is matched.
+            </summary>
+            <param name="context">The rewriting context.</param>
+            <returns>True if the condition is met.</returns>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Actions.SetLocationAction">
+            <summary>
+            Sets the Location.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Actions.SetLocationAction.#ctor(System.String)">
+            <summary>
+            Default constructor.
+            </summary>
+            <param name="location">The location (pattern) to set.</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Actions.SetLocationAction.Execute(Intelligencia.UrlRewriter.RewriteContext)">
+            <summary>
+            Executes the action.
+            </summary>
+            <param name="context">The rewriting context.</param>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Actions.SetLocationAction.Location">
+            <summary>
+            The location to set.  This can include replacements referencing the matched pattern,
+            for example $1, $2, ... $n and ${group} as well as ${ServerVariable} and mapping, e.g., 
+            ${MapName:$1}.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Actions.RedirectAction">
+            <summary>
+            Redirect using 302 temporary redirect.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Actions.RedirectAction.#ctor(System.String,System.Boolean)">
+            <summary>
+            Default constructor.
+            </summary>
+            <param name="location">The location to set.</param>
+            <param name="permanent">Whether the redirection is permanent.</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Actions.RedirectAction.Execute(Intelligencia.UrlRewriter.RewriteContext)">
+            <summary>
+            Executes the action.
+            </summary>
+            <param name="context">The rewriting context.</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Actions.RedirectAction.IsMatch(Intelligencia.UrlRewriter.RewriteContext)">
+            <summary>
+            Determines if the rewrite rule matches.
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Actions.RedirectAction.Conditions">
+            <summary>
+            Conditions that must hold for the rule to fire.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Utilities.MapPath">
+            <summary>
+            Map path delegate
+            </summary>
+            <param name="url">The url to map</param>
+            <returns>The physical path.</returns>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.RewriterHttpModule">
+            <summary>
+            Main HTTP Module for the URL Rewriter.
+            Rewrites URL's based on patterns and conditions specified in the configuration file.
+            This class cannot be inherited.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.RewriterHttpModule.System#Web#IHttpModule#Init(System.Web.HttpApplication)">
+            <summary>
+            Initialises the module.
+            </summary>
+            <param name="context">The application context.</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.RewriterHttpModule.System#Web#IHttpModule#Dispose">
+            <summary>
+            Disposes of the module.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.RewriterHttpModule.BeginRequest(System.Object,System.EventArgs)">
+            <summary>
+            Event handler for the "BeginRequest" event.
+            </summary>
+            <param name="sender">The sender object</param>
+            <param name="e">Event args</param>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.RewriterHttpModule.RawUrl">
+            <summary>
+            The raw URL for the current request, before any rewriting.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Parsers.ExistsConditionParser">
+            <summary>
+            Parser for exists conditions.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Parsers.ExistsConditionParser.Parse(System.Xml.XmlNode)">
+            <summary>
+            Parses the condition.
+            </summary>
+            <param name="node">The node to parse.</param>
+            <returns>The condition parsed, or null if nothing parsed.</returns>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Configuration.ConditionParserPipeline">
+            <summary>
+            Pipeline for creating the Condition parsers.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Configuration.ConditionParserPipeline.AddParser(System.String)">
+            <summary>
+            Adds a parser.
+            </summary>
+            <param name="parserType">The parser type.</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Configuration.ConditionParserPipeline.AddParser(Intelligencia.UrlRewriter.IRewriteConditionParser)">
+            <summary>
+            Adds a parser.
+            </summary>
+            <param name="parser">The parser.</param>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Actions.RewriteAction">
+            <summary>
+            Rewrites in-place.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Actions.RewriteAction.#ctor(System.String,Intelligencia.UrlRewriter.RewriteProcessing)">
+            <summary>
+            Default constructor.
+            </summary>
+            <param name="location">The location to set.</param>
+            <param name="processing">The processing directive.</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Actions.RewriteAction.Execute(Intelligencia.UrlRewriter.RewriteContext)">
+            <summary>
+            Executes the action.
+            </summary>
+            <param name="context">The rewrite context.</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Actions.RewriteAction.IsMatch(Intelligencia.UrlRewriter.RewriteContext)">
+            <summary>
+            Determines if the rewrite rule matches.
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Actions.RewriteAction.Conditions">
+            <summary>
+            Conditions that must hold for the rule to fire.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Transforms.Base64Transform">
+            <summary>
+            Base 64 encodes the input.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Transforms.Base64Transform.ApplyTransform(System.String)">
+            <summary>
+            Applies a transformation to the input string.
+            </summary>
+            <param name="input">The input string.</param>
+            <returns>The transformed string.</returns>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Transforms.Base64Transform.Name">
+            <summary>
+            The name of the action.
+            </summary>
+        </member>
         <member name="T:Intelligencia.UrlRewriter.Parsers.NotImplementedActionParser">
             <summary>
             Parser for forbidden actions.
             </summary>
         </member>
-        <member name="M:Intelligencia.UrlRewriter.Parsers.NotImplementedActionParser.Parse(System.Xml.XmlNode,Intelligencia.UrlRewriter.Configuration.RewriterConfiguration)">
+        <member name="M:Intelligencia.UrlRewriter.Parsers.NotImplementedActionParser.Parse(System.Xml.XmlNode,Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration)">
             <summary>
             Parses the node.
             </summary>
@@ -1552,18 +2104,6 @@
             <summary>
             Whether the action allows attributes.
             </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Parsers.MethodConditionParser">
-            <summary>
-            Parser for method conditions.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Parsers.MethodConditionParser.Parse(System.Xml.XmlNode)">
-            <summary>
-            Parses the condition.
-            </summary>
-            <param name="node">The node to parse.</param>
-            <returns>The condition parsed, or null if nothing parsed.</returns>
         </member>
         <member name="T:Intelligencia.UrlRewriter.Logging.NullLogger">
             <summary>
@@ -1613,37 +2153,37 @@
             Parses the IFNOT node.
             </summary>
         </member>
-        <member name="T:Intelligencia.UrlRewriter.Parsers.IfConditionActionParser">
-            <summary>
-            Parses the IF node.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Parsers.IfConditionActionParser.Parse(System.Xml.XmlNode,Intelligencia.UrlRewriter.Configuration.RewriterConfiguration)">
-            <summary>
-            Parses the action.
-            </summary>
-            <param name="node">The node to parse.</param>
-            <param name="config">The rewriter configuration.</param>
-            <returns>The parsed action, null if no action parsed.</returns>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Parsers.IfConditionActionParser.Name">
-            <summary>
-            The name of the action.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Parsers.IfConditionActionParser.AllowsNestedActions">
-            <summary>
-            Whether the action allows nested actions.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Parsers.IfConditionActionParser.AllowsAttributes">
-            <summary>
-            Whether the action allows attributes.
-            </summary>
-        </member>
         <member name="P:Intelligencia.UrlRewriter.Parsers.UnlessConditionActionParser.Name">
             <summary>
             The name of the action.
+            </summary>
+        </member>
+        <member name="T:Intelligencia.UrlRewriter.Actions.SetPropertyAction">
+            <summary>
+            Action that sets properties in the context.
+            </summary>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Actions.SetPropertyAction.#ctor(System.String,System.String)">
+            <summary>
+            Default constructor.
+            </summary>
+            <param name="name">The name of the variable.</param>
+            <param name="value">The name of the value.</param>
+        </member>
+        <member name="M:Intelligencia.UrlRewriter.Actions.SetPropertyAction.Execute(Intelligencia.UrlRewriter.RewriteContext)">
+            <summary>
+            Executes the action.
+            </summary>
+            <param name="context">The rewrite context.</param>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Actions.SetPropertyAction.Name">
+            <summary>
+            The name of the variable.
+            </summary>
+        </member>
+        <member name="P:Intelligencia.UrlRewriter.Actions.SetPropertyAction.Value">
+            <summary>
+            The value of the variable.
             </summary>
         </member>
         <member name="T:Intelligencia.UrlRewriter.Actions.ForbiddenAction">
@@ -1654,546 +2194,6 @@
         <member name="M:Intelligencia.UrlRewriter.Actions.ForbiddenAction.#ctor">
             <summary>
             Default constructor.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Parsers.SetCookieActionParser">
-            <summary>
-            Action parser for the set-cookie action.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Parsers.SetCookieActionParser.Parse(System.Xml.XmlNode,Intelligencia.UrlRewriter.Configuration.RewriterConfiguration)">
-            <summary>
-            Parses the node.
-            </summary>
-            <param name="node">The node to parse.</param>
-            <param name="config">The rewriter configuration.</param>
-            <returns>The parsed action, or null if no action parsed.</returns>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Parsers.SetCookieActionParser.Name">
-            <summary>
-            The name of the action.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Parsers.SetCookieActionParser.AllowsNestedActions">
-            <summary>
-            Whether the action allows nested actions.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Parsers.SetCookieActionParser.AllowsAttributes">
-            <summary>
-            Whether the action allows attributes.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Parsers.NotFoundActionParser">
-            <summary>
-            Parser for not found actions.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Parsers.NotFoundActionParser.Parse(System.Xml.XmlNode,Intelligencia.UrlRewriter.Configuration.RewriterConfiguration)">
-            <summary>
-            Parses the node.
-            </summary>
-            <param name="node">The node to parse.</param>
-            <param name="config">The rewriter configuration.</param>
-            <returns>The parsed action, or null if no action parsed.</returns>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Parsers.NotFoundActionParser.Name">
-            <summary>
-            The name of the action.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Parsers.NotFoundActionParser.AllowsNestedActions">
-            <summary>
-            Whether the action allows nested actions.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Parsers.NotFoundActionParser.AllowsAttributes">
-            <summary>
-            Whether the action allows attributes.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Logging.DebugLogger">
-            <summary>
-            A logger which writes out to the Debug window.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Logging.DebugLogger.Debug(System.Object)">
-            <summary>
-            Writes a debug message.
-            </summary>
-            <param name="message">The message to write.</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Logging.DebugLogger.Info(System.Object)">
-            <summary>
-            Writes an informational message.
-            </summary>
-            <param name="message">The message to write.</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Logging.DebugLogger.Warn(System.Object)">
-            <summary>
-            Writes a warning message.
-            </summary>
-            <param name="message">The message to write.</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Logging.DebugLogger.Error(System.Object)">
-            <summary>
-            Writes an error.
-            </summary>
-            <param name="message">The message to write.</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Logging.DebugLogger.Error(System.Object,System.Exception)">
-            <summary>
-            Writes an error.
-            </summary>
-            <param name="message">The message to write.</param>
-            <param name="exception">The exception</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Logging.DebugLogger.Fatal(System.Object,System.Exception)">
-            <summary>
-            Writes a fatal error.
-            </summary>
-            <param name="message">The message to write.</param>
-            <param name="exception">The exception</param>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Actions.NotImplementedAction">
-            <summary>
-            Returns a 501 Not Implemented HTTP status code.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Actions.NotImplementedAction.#ctor">
-            <summary>
-            Default constructor.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Actions.GoneAction">
-            <summary>
-            Returns a 410 Gone HTTP status code.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Actions.GoneAction.#ctor">
-            <summary>
-            Default constructor.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Transforms.EncodeTransform">
-            <summary>
-            Url encodes the input.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Transforms.EncodeTransform.ApplyTransform(System.String)">
-            <summary>
-            Applies a transformation to the input string.
-            </summary>
-            <param name="input">The input string.</param>
-            <returns>The transformed string.</returns>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Transforms.EncodeTransform.Name">
-            <summary>
-            The name of the action.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.RewriterEngine">
-            <summary>
-            The core RewriterEngine class.
-            </summary>
-        </member>
-        <!-- Badly formed XML comment ignored for member "M:Intelligencia.UrlRewriter.RewriterEngine.#ctor(Intelligencia.UrlRewriter.Utilities.IHttpContext,Intelligencia.UrlRewriter.Configuration.IConfigurationManager,Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration)" -->
-        <member name="M:Intelligencia.UrlRewriter.RewriterEngine.ResolveLocation(System.String)">
-            <summary>
-            Resolves an Application-path relative location
-            </summary>
-            <param name="location">The location</param>
-            <returns>The absolute location.</returns>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.RewriterEngine.Rewrite">
-            <summary>
-            Performs the rewriting.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.RewriterEngine.Expand(Intelligencia.UrlRewriter.RewriteContext,System.String)">
-            <summary>
-            Expands the given input based on the current context.
-            </summary>
-            <param name="context">The current context</param>
-            <param name="input">The input to expand.</param>
-            <returns>The expanded input</returns>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.RewriterEngine.RawUrl">
-            <summary>
-            The raw url.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.RewriterEngine.OriginalQueryString">
-            <summary>
-            The original query string.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.RewriterEngine.QueryString">
-            <summary>
-            The final querystring, after rewriting.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Parsers.SetPropertyActionParser">
-            <summary>
-            Action parser for the set-property action.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Parsers.SetPropertyActionParser.Parse(System.Xml.XmlNode,Intelligencia.UrlRewriter.Configuration.RewriterConfiguration)">
-            <summary>
-            Parses the node.
-            </summary>
-            <param name="node">The node to parse.</param>
-            <param name="config">The rewriter configuration.</param>
-            <returns>The parsed action, or null if no action parsed.</returns>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Parsers.SetPropertyActionParser.Name">
-            <summary>
-            The name of the action.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Parsers.SetPropertyActionParser.AllowsNestedActions">
-            <summary>
-            Whether the action allows nested actions.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Parsers.SetPropertyActionParser.AllowsAttributes">
-            <summary>
-            Whether the action allows attributes.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Parsers.ForbiddenActionParser">
-            <summary>
-            Parser for forbidden actions.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Parsers.ForbiddenActionParser.Parse(System.Xml.XmlNode,Intelligencia.UrlRewriter.Configuration.RewriterConfiguration)">
-            <summary>
-            Parses the node.
-            </summary>
-            <param name="node">The node to parse.</param>
-            <param name="config">The rewriter configuration.</param>
-            <returns>The parsed action, or null if no action parsed.</returns>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Parsers.ForbiddenActionParser.Name">
-            <summary>
-            The name of the action.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Parsers.ForbiddenActionParser.AllowsNestedActions">
-            <summary>
-            Whether the action allows nested actions.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Parsers.ForbiddenActionParser.AllowsAttributes">
-            <summary>
-            Whether the action allows attributes.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Configuration.RewriterConfiguration">
-            <summary>
-            Configuration for the URL rewriter.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration">
-            <summary>
-            Interface for the rewriter's configuration.
-            Useful for plugging out config in unit tests.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration.Rules">
-            <summary>
-            The rules.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration.ActionParserFactory">
-            <summary>
-            The action parser factory.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration.TransformFactory">
-            <summary>
-            The transform factory.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration.ConditionParserPipeline">
-            <summary>
-            The condition parser pipeline.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration.ErrorHandlers">
-            <summary>
-            Dictionary of error handlers.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration.Logger">
-            <summary>
-            Logger to use for logging information.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration.DefaultDocuments">
-            <summary>
-            Collection of default document names to use if the result of a rewriting
-            is a directory name.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration.XPoweredBy">
-            <summary>
-            Additional X-Powered-By header.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Configuration.IRewriterConfiguration.ConfigurationManager">
-            <summary>
-            The configuration manager instance.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Configuration.RewriterConfiguration.#ctor">
-            <summary>
-            Default constructor.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Configuration.RewriterConfiguration.#ctor(Intelligencia.UrlRewriter.Configuration.IConfigurationManager)">
-            <summary>
-            Constructor.
-            </summary>
-            <param name="configurationManager">The configuration manager instance</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Configuration.RewriterConfiguration.LoadFromConfig">
-            <summary>
-            Loads the rewriter configuration from the web.config file.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Configuration.RewriterConfiguration.Rules">
-            <summary>
-            The rules.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Configuration.RewriterConfiguration.ActionParserFactory">
-            <summary>
-            The action parser factory.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Configuration.RewriterConfiguration.TransformFactory">
-            <summary>
-            The transform factory.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Configuration.RewriterConfiguration.ConditionParserPipeline">
-            <summary>
-            The condition parser pipeline.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Configuration.RewriterConfiguration.ErrorHandlers">
-            <summary>
-            Dictionary of error handlers.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Configuration.RewriterConfiguration.Logger">
-            <summary>
-            Logger to use for logging information.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Configuration.RewriterConfiguration.DefaultDocuments">
-            <summary>
-            Collection of default document names to use if the result of a rewriting
-            is a directory name.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Configuration.RewriterConfiguration.XPoweredBy">
-            <summary>
-            Additional X-Powered-By header.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Configuration.RewriterConfiguration.ConfigurationManager">
-            <summary>
-            The configuration manager instance.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.RewriteFormHtmlTextWriter">
-            <summary>
-            The HTML Text Writer to use for rewriting form actions.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.RewriteFormHtmlTextWriter.#ctor(System.Web.UI.HtmlTextWriter)">
-            <summary>
-            Constructor
-            </summary>
-            <param name="writer">The writer to use.</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.RewriteFormHtmlTextWriter.WriteAttribute(System.String,System.String,System.Boolean)">
-            <summary>
-            Writes an attribute
-            </summary>
-            <param name="name">Name of the attribute</param>
-            <param name="value">Value of the attribute</param>
-            <param name="fEncode"></param>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Logging.TraceLogger">
-            <summary>
-            A logger which writes to Trace, which may be read by a Trace Listener.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Logging.TraceLogger.Debug(System.Object)">
-            <summary>
-            Writes a debug message.
-            </summary>
-            <param name="message">The message to write.</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Logging.TraceLogger.Info(System.Object)">
-            <summary>
-            Writes an informational message.
-            </summary>
-            <param name="message">The message to write.</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Logging.TraceLogger.Warn(System.Object)">
-            <summary>
-            Writes a warning message.
-            </summary>
-            <param name="message">The message to write.</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Logging.TraceLogger.Error(System.Object)">
-            <summary>
-            Writes an error.
-            </summary>
-            <param name="message">The message to write.</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Logging.TraceLogger.Error(System.Object,System.Exception)">
-            <summary>
-            Writes an error.
-            </summary>
-            <param name="message">The message to write.</param>
-            <param name="exception">The exception</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Logging.TraceLogger.Fatal(System.Object,System.Exception)">
-            <summary>
-            Writes a fatal error.
-            </summary>
-            <param name="message">The message to write.</param>
-            <param name="exception">The exception</param>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Actions.SetAppSettingPropertyAction">
-            <summary>
-            Action that sets a property in the context from AppSettings, i.e the appSettings collection
-            in web.config.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Actions.SetAppSettingPropertyAction.#ctor(System.String,System.String)">
-            <summary>
-            Default constructor.
-            </summary>
-            <param name="name">The name of the variable.</param>
-            <param name="appSettingsKey">The name of the key in AppSettings.</param>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Actions.SetAppSettingPropertyAction.Execute(Intelligencia.UrlRewriter.RewriteContext)">
-            <summary>
-            Executes the action.
-            </summary>
-            <param name="context">The rewrite context.</param>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Actions.SetAppSettingPropertyAction.Name">
-            <summary>
-            The name of the variable.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Actions.SetAppSettingPropertyAction.AppSettingKey">
-            <summary>
-            The name of the key in AppSettings.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Parsers.SetAppSettingPropertyActionParser">
-            <summary>
-            Action parser for the set-appsetting property action.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Parsers.SetAppSettingPropertyActionParser.Parse(System.Xml.XmlNode,Intelligencia.UrlRewriter.Configuration.RewriterConfiguration)">
-            <summary>
-            Parses the node.
-            </summary>
-            <param name="node">The node to parse.</param>
-            <param name="config">The rewriter configuration.</param>
-            <returns>The parsed action, or null if no action parsed.</returns>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Parsers.SetAppSettingPropertyActionParser.Name">
-            <summary>
-            The name of the action.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Parsers.SetAppSettingPropertyActionParser.AllowsNestedActions">
-            <summary>
-            Whether the action allows nested actions.
-            </summary>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Parsers.SetAppSettingPropertyActionParser.AllowsAttributes">
-            <summary>
-            Whether the action allows attributes.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.XmlNodeExtensions">
-            <summary>
-            Extension methods for the XmlNode class.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.XmlNodeExtensions.GetRequiredAttribute(System.Xml.XmlNode,System.String)">
-            <summary>
-            Gets a required attribute from an XML node.
-            Throws an error if the required attribute is missing or empty (blank).
-            </summary>
-            <param name="node">The XML node</param>
-            <param name="attributeName">The XML attribute name</param>
-            <returns>The attribute value</returns>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.XmlNodeExtensions.GetRequiredAttribute(System.Xml.XmlNode,System.String,System.Boolean)">
-            <summary>
-            Gets a required attribute from an XML node.
-            Throws an error if the required attribute is missing.
-            Throws an error if the required attribute is empty (blank) and allowBlank is set to false.
-            or empty (blank).
-            </summary>
-            <param name="node">The XML node</param>
-            <param name="attributeName">The XML attribute name</param>
-            <param name="allowBlank">Blank (empty) values okay?</param>
-            <returns>The attribute value</returns>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Utilities.MapPath">
-            <summary>
-            Map path delegate
-            </summary>
-            <param name="url">The url to map</param>
-            <returns>The physical path.</returns>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Configuration.ConfigurationManagerFacade">
-            <summary>
-            A naive pass-through implementation of the IConfigurationManager facade that proxys calls to the
-            ASP.NET ConfigurationManager.
-            </summary>
-        </member>
-        <member name="T:Intelligencia.UrlRewriter.Configuration.IConfigurationManager">
-            <summary>
-            Interface for a facade to the ASP.NET ConfigurationManager.
-            Useful for plugging out the ConfigurationManager in unit tests.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Configuration.IConfigurationManager.GetSection(System.String)">
-            <summary>
-            Retrieves a configuration section from the web application's config file.
-            </summary>
-            <param name="sectionName">The configuration section name</param>
-            <returns>The configuration section class instance</returns>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Configuration.IConfigurationManager.AppSettings">
-            <summary>
-            Gets the AppSettings from the web application's config file.
-            </summary>
-        </member>
-        <member name="M:Intelligencia.UrlRewriter.Configuration.ConfigurationManagerFacade.GetSection(System.String)">
-            <summary>
-            Retrieves a configuration section from the web application's config file.
-            </summary>
-            <param name="sectionName">The configuration section name</param>
-            <returns>The configuration section class instance</returns>
-        </member>
-        <member name="P:Intelligencia.UrlRewriter.Configuration.ConfigurationManagerFacade.AppSettings">
-            <summary>
-            Gets the AppSettings from the web application's config file.
             </summary>
         </member>
     </members>

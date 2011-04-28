@@ -16,16 +16,26 @@ using Intelligencia.UrlRewriter.Utilities;
 namespace Intelligencia.UrlRewriter
 {
     /// <summary>
-    /// Encapsulates all rewriting information about an individual rewrite request.  This class cannot be inherited.
+    /// Encapsulates all rewriting information about an individual rewrite request.
+    /// This class cannot be inherited.
     /// </summary>
     /// <remarks>
-    /// This class cannot be created directly.  It will be provided to actions and conditions
-    /// by the framework.
+    /// This class cannot be created directly.
+    /// It will be provided to actions and conditions by the framework.
     /// </remarks>
     public sealed class RewriteContext
     {
         /// <summary>
-        /// Default constructor.
+        /// Constructor.
+        /// TODO: Implement this as an interface??
+        /// TODO: Or sort out these constructors in such a way that it is unit-testable.
+        /// </summary>
+        public RewriteContext()
+        {
+        }
+
+        /// <summary>
+        /// Internal constructor.
         /// </summary>
         /// <param name="engine">The rewriting engine.</param>
         /// <param name="rawUrl">The initial, raw URL.</param>

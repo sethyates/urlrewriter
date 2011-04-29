@@ -25,6 +25,7 @@ namespace Intelligencia.UrlRewriter.Conditions
             {
                 throw new ArgumentNullException("pattern");
             }
+
             _pattern = new Regex(pattern, RegexOptions.IgnoreCase);
         }
 
@@ -41,7 +42,7 @@ namespace Intelligencia.UrlRewriter.Conditions
         /// </summary>
         /// <param name="context">The rewriting context.</param>
         /// <returns>True if the condition is met.</returns>
-        public abstract bool IsMatch(RewriteContext context);
+        public abstract bool IsMatch(IRewriteContext context);
 
         private Regex _pattern;
     }

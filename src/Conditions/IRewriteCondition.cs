@@ -21,6 +21,6 @@ namespace Intelligencia.UrlRewriter
         /// </summary>
         /// <param name="context">The rewrite context.</param>
         /// <returns>True if the condition is met.</returns>
-        bool IsMatch(RewriteContext context);
+        bool IsMatch(IRewriteContext context);
     }
 }

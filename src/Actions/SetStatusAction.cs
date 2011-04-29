@@ -36,7 +36,7 @@ namespace Intelligencia.UrlRewriter.Actions
         /// Executes the action.
         /// </summary>
         /// <param name="context">The rewriting context.</param>
-        public virtual RewriteProcessing Execute(RewriteContext context)
+        public virtual RewriteProcessing Execute(IRewriteContext context)
         {
             if (context == null)
             {

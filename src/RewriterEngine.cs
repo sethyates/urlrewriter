@@ -23,7 +23,8 @@ namespace Intelligencia.UrlRewriter
     /// </summary>
     public class RewriterEngine
     {
-        private const char EndChar = (char)65535;
+        private const char EndChar = (char)65535; // The 'end' char for StringReader.Read() (i.e. -1 as a char).
+        private const int MaxRestarts = 10; // Controls the number of restarts so we don't get into an infinite loop
 
         /// <summary>
         /// Constructor.
@@ -85,7 +86,7 @@ namespace Intelligencia.UrlRewriter
             _configuration.Logger.Debug(MessageProvider.FormatString(Message.StartedProcessing, originalUrl));
 
             // Create the context
-            RewriteContext context = new RewriteContext(this, originalUrl, _httpContext, _configurationManager);
+            IRewriteContext context = new RewriteContext(this, originalUrl, _httpContext, _configurationManager);
 
             // Process each rule.
             ProcessRules(context);
@@ -97,7 +98,7 @@ namespace Intelligencia.UrlRewriter
             AppendCookies(context);
 
             // Rewrite the path if the location has changed.
-            _httpContext.SetStatusCode((int)context.StatusCode);
+            _httpContext.SetStatusCode(context.StatusCode);
             if ((context.Location != originalUrl) && ((int)context.StatusCode < 400))
             {
                 if ((int)context.StatusCode < 300)
@@ -105,7 +106,7 @@ namespace Intelligencia.UrlRewriter
                     // Successful status if less than 300
                     _configuration.Logger.Info(MessageProvider.FormatString(Message.RewritingXtoY, _httpContext.RawUrl, context.Location));
 
-                    // To verify that the url exists on this server:
+                    // To verify that the URL exists on this server:
                     //  VerifyResultExists(context);
 
                     // To ensure that directories are rewritten to their default document:
@@ -141,7 +142,7 @@ namespace Intelligencia.UrlRewriter
         /// <param name="context">The current context</param>
         /// <param name="input">The input to expand.</param>
         /// <returns>The expanded input</returns>
-        public string Expand(RewriteContext context, string input)
+        public string Expand(IRewriteContext context, string input)
         {
             if (context == null)
             {
@@ -192,10 +193,8 @@ namespace Intelligencia.UrlRewriter
             }
         }
 
-        private void ProcessRules(RewriteContext context)
+        private void ProcessRules(IRewriteContext context)
         {
-            const int MaxRestart = 10; // Controls the number of restarts so we don't get into an infinite loop
-
             IList<IRewriteAction> rewriteRules = _configuration.Rules;
             int restarts = 0;
             for (int i = 0; i < rewriteRules.Count; i++)
@@ -221,7 +220,7 @@ namespace Intelligencia.UrlRewriter
                         // Restart from the first rule.
                         i = 0;
 
-                        if (++restarts > MaxRestart)
+                        if (++restarts > MaxRestarts)
                         {
                             throw new InvalidOperationException(MessageProvider.FormatString(Message.TooManyRestarts));
                         }
@@ -230,7 +229,7 @@ namespace Intelligencia.UrlRewriter
             }
         }
 
-        private bool HandleDefaultDocument(RewriteContext context)
+        private bool HandleDefaultDocument(IRewriteContext context)
         {
             Uri uri = new Uri(_httpContext.RequestUrl, context.Location);
             UriBuilder b = new UriBuilder(uri);
@@ -256,7 +255,7 @@ namespace Intelligencia.UrlRewriter
             return false;
         }
 
-        private void VerifyResultExists(RewriteContext context)
+        private void VerifyResultExists(IRewriteContext context)
         {
             if ((String.Compare(context.Location, _httpContext.RawUrl) != 0) && ((int)context.StatusCode < 300))
             {
@@ -277,10 +276,10 @@ namespace Intelligencia.UrlRewriter
             }
         }
 
-        private void HandleError(RewriteContext context)
+        private void HandleError(IRewriteContext context)
         {
             // Return the status code.
-            _httpContext.SetStatusCode((int)context.StatusCode);
+            _httpContext.SetStatusCode(context.StatusCode);
 
             // Get the error handler if there is one.
             if (_configuration.ErrorHandlers.ContainsKey((int)context.StatusCode))
@@ -314,7 +313,7 @@ namespace Intelligencia.UrlRewriter
             }
         }
 
-        private void AppendHeaders(RewriteContext context)
+        private void AppendHeaders(IRewriteContext context)
         {
             foreach (string headerKey in context.ResponseHeaders)
             {
@@ -322,7 +321,7 @@ namespace Intelligencia.UrlRewriter
             }
         }
 
-        private void AppendCookies(RewriteContext context)
+        private void AppendCookies(IRewriteContext context)
         {
             for (int i = 0; i < context.ResponseCookies.Count; i++)
             {
@@ -330,15 +329,18 @@ namespace Intelligencia.UrlRewriter
             }
         }
 
-        private void SetContextItems(RewriteContext context)
+        private void SetContextItems(IRewriteContext context)
         {
             OriginalQueryString = new Uri(_httpContext.RequestUrl, _httpContext.RawUrl).Query.Replace("?", "");
             QueryString = new Uri(_httpContext.RequestUrl, context.Location).Query.Replace("?", "");
 
             // Add in the properties as context items, so these will be accessible to the handler
-            foreach (string key in context.Properties.Keys)
+            foreach (string propertyKey in context.Properties.Keys)
             {
-                _httpContext.SetItem(String.Format("Rewriter.{0}", key), context.Properties[key]);
+                string itemsKey = String.Format("Rewriter.{0}", propertyKey);
+                string itemsValue = context.Properties[propertyKey];
+
+                _httpContext.Items[itemsKey] = itemsValue;
             }
         }
 
@@ -347,8 +349,8 @@ namespace Intelligencia.UrlRewriter
         /// </summary>
         public string RawUrl
         {
-            get { return (string) _httpContext.GetItem(ContextRawUrl); }
-            set { _httpContext.SetItem(ContextRawUrl, value); }
+            get { return (string)_httpContext.Items[ContextRawUrl]; }
+            set { _httpContext.Items[ContextRawUrl] = value; }
         }
 
         /// <summary>
@@ -356,8 +358,8 @@ namespace Intelligencia.UrlRewriter
         /// </summary>
         public string OriginalQueryString
         {
-            get { return (string) _httpContext.GetItem(ContextOriginalQueryString); }
-            set { _httpContext.SetItem(ContextOriginalQueryString, value); }
+            get { return (string) _httpContext.Items[ContextOriginalQueryString]; }
+            set { _httpContext.Items[ContextOriginalQueryString] = value; }
         }
 
         /// <summary>
@@ -365,11 +367,11 @@ namespace Intelligencia.UrlRewriter
         /// </summary>
         public string QueryString
         {
-            get { return (string) _httpContext.GetItem(ContextQueryString); }
-            set { _httpContext.SetItem(ContextQueryString, value); }
+            get { return (string)_httpContext.Items[ContextQueryString]; }
+            set { _httpContext.Items[ContextQueryString] = value; }
         }
 
-        private string Reduce(RewriteContext context, StringReader reader)
+        private string Reduce(IRewriteContext context, StringReader reader)
         {
             string result;
             char ch = (char)reader.Read();

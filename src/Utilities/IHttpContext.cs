@@ -6,18 +6,13 @@
 // 
 
 using System;
-using System.Web;
+using System.Collections;
 using System.Collections.Specialized;
+using System.Net;
+using System.Web;
 
 namespace Intelligencia.UrlRewriter.Utilities
 {
-    /// <summary>
-    /// Map path delegate
-    /// </summary>
-    /// <param name="url">The url to map</param>
-    /// <returns>The physical path.</returns>
-    public delegate string MapPath(string url);
-
     /// <summary>
     /// Interface for the HTTP context.
     /// Useful for plugging out the HttpContext.Current object in unit tests.
@@ -30,36 +25,38 @@ namespace Intelligencia.UrlRewriter.Utilities
         string ApplicationPath { get; }
 
         /// <summary>
-        /// Retrieves the raw url.
+        /// Retrieves the raw URL.
         /// </summary>
         string RawUrl { get; }
 
         /// <summary>
-        /// Retrieves the current request url.
+        /// Retrieves the current request URL.
         /// </summary>
         Uri RequestUrl { get; }
 
         /// <summary>
-        /// Delegate to use for mapping paths.
+        /// Maps the given URL to the absolute local path.
         /// </summary>
-        MapPath MapPath { get; }
+        /// <param name="url">The URL to map.</param>
+        /// <returns>The absolute local file path relating to the URL.</returns>
+        string MapPath(string url);
 
         /// <summary>
         /// Sets the status code for the response.
         /// </summary>
         /// <param name="code">The status code.</param>
-        void SetStatusCode(int code);
+        void SetStatusCode(HttpStatusCode code);
 
         /// <summary>
-        /// Rewrites the request to the new url.
+        /// Rewrites the request to the new URL.
         /// </summary>
-        /// <param name="url">The new url to rewrite to.</param>
+        /// <param name="url">The new URL to rewrite to.</param>
         void RewritePath(string url);
 
         /// <summary>
-        /// Sets the redirection location to the given url.
+        /// Sets the redirection location to the given URL.
         /// </summary>
-        /// <param name="url">The url of the redirection location.</param>
+        /// <param name="url">The URL of the redirection location.</param>
         void SetRedirectLocation(string url);
 
         /// <summary>
@@ -82,21 +79,12 @@ namespace Intelligencia.UrlRewriter.Utilities
         void HandleError(IRewriteErrorHandler handler);
 
         /// <summary>
-        /// Sets a context item.
+        /// The Items collection for the current request.
         /// </summary>
-        /// <param name="item">The item key</param>
-        /// <param name="value">The item value</param>
-        void SetItem(object item, object value);
+        IDictionary Items { get; }
 
         /// <summary>
-        /// Retrieves a context item.
-        /// </summary>
-        /// <param name="item">The item key.</param>
-        /// <returns>The item value.</returns>
-        object GetItem(object item);
-
-        /// <summary>
-        /// Retrieves the HTTP method used by the request.
+        /// Retrieves the HTTP method used by the request (GET, POST, HEAD, PUT, DELETE).
         /// </summary>
         string HttpMethod { get; }
 

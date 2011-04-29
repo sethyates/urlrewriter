@@ -23,17 +23,8 @@ namespace Intelligencia.UrlRewriter
     /// This class cannot be created directly.
     /// It will be provided to actions and conditions by the framework.
     /// </remarks>
-    public sealed class RewriteContext
+    internal class RewriteContext : IRewriteContext
     {
-        /// <summary>
-        /// Constructor.
-        /// TODO: Implement this as an interface??
-        /// TODO: Or sort out these constructors in such a way that it is unit-testable.
-        /// </summary>
-        public RewriteContext()
-        {
-        }
-
         /// <summary>
         /// Internal constructor.
         /// </summary>
@@ -62,9 +53,8 @@ namespace Intelligencia.UrlRewriter
 
             _engine = engine;
             _configurationManager = configurationManager;
+            _httpContext = httpContext;
             _location = rawUrl;
-            _method = httpContext.HttpMethod;
-            _mapPath = httpContext.MapPath;
 
             // Initialise the Properties collection from all the server variables, headers and cookies.
             foreach (string key in httpContext.ServerVariables.AllKeys)
@@ -90,13 +80,11 @@ namespace Intelligencia.UrlRewriter
         }
 
         /// <summary>
-        /// Maps the given URL to the absolute local path.
+        /// The current HTTP context.
         /// </summary>
-        /// <param name="url">The URL to map.</param>
-        /// <returns>The absolute local file path relating to the url.</returns>
-        public string MapPath(string url)
+        public IHttpContext HttpContext
         {
-            return _mapPath(url);
+            get { return _httpContext; }
         }
 
         /// <summary>
@@ -109,14 +97,6 @@ namespace Intelligencia.UrlRewriter
         {
             get { return _location; }
             set { _location = value; }
-        }
-
-        /// <summary>
-        /// The request method (GET, PUT, POST, HEAD, DELETE).
-        /// </summary>
-        public string Method
-        {
-            get { return _method; }
         }
 
         /// <summary>
@@ -191,13 +171,12 @@ namespace Intelligencia.UrlRewriter
 
         private RewriterEngine _engine;
         private IConfigurationManager _configurationManager;
-        private string _method;
+        private IHttpContext _httpContext;
         private HttpStatusCode _statusCode = HttpStatusCode.OK;
         private string _location;
         private NameValueCollection _properties = new NameValueCollection();
         private NameValueCollection _responseHeaders = new NameValueCollection();
         private HttpCookieCollection _responseCookies = new HttpCookieCollection();
         private Match _lastMatch;
-        private MapPath _mapPath;
     }
 }

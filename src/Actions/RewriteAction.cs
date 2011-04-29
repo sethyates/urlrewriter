@@ -30,7 +30,7 @@ namespace Intelligencia.UrlRewriter.Actions
         /// Executes the action.
         /// </summary>
         /// <param name="context">The rewrite context.</param>
-        public override RewriteProcessing Execute(RewriteContext context)
+        public override RewriteProcessing Execute(IRewriteContext context)
         {
             base.Execute(context);
             return _processing;
@@ -39,20 +39,11 @@ namespace Intelligencia.UrlRewriter.Actions
         /// <summary>
         /// Determines if the rewrite rule matches.
         /// </summary>
-        /// <param name="context"></param>
-        /// <returns></returns>
-        public bool IsMatch(RewriteContext context)
+        /// <param name="context">The rewrite context.</param>
+        /// <returns>True if the rule matches.</returns>
+        public bool IsMatch(IRewriteContext context)
         {
-            // Ensure the conditions are met.
-            foreach (IRewriteCondition condition in Conditions)
-            {
-                if (!condition.IsMatch(context))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+             return Conditions.IsMatch(context);
         }
 
         /// <summary>

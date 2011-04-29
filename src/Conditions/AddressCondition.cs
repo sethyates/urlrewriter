@@ -34,7 +34,7 @@ namespace Intelligencia.UrlRewriter.Conditions
         /// </summary>
         /// <param name="context">The rewriting context.</param>
         /// <returns>True if the condition is met.</returns>
-        public bool IsMatch(RewriteContext context)
+        public bool IsMatch(IRewriteContext context)
         {
             if (context == null)
             {

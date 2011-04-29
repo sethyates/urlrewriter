@@ -6,10 +6,6 @@
 // 
 
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
 using System.Xml;
 using Intelligencia.UrlRewriter.Actions;
 using Intelligencia.UrlRewriter.Configuration;

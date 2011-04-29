@@ -25,6 +25,7 @@ namespace Intelligencia.UrlRewriter.Conditions
             {
                 throw new ArgumentNullException("pattern");
             }
+
             _pattern = pattern;
         }
 
@@ -33,13 +34,29 @@ namespace Intelligencia.UrlRewriter.Conditions
         /// </summary>
         /// <param name="context">The rewriting context.</param>
         /// <returns>True if the condition is met.</returns>
-        public bool IsMatch(RewriteContext context)
+        public bool IsMatch(IRewriteContext context)
         {
             if (context == null)
             {
                 throw new ArgumentNullException("context");
             }
 
+            Regex regex = GetRegex(context);
+
+            Match match = regex.Match(context.Location);
+            if (match.Success)
+            {
+                context.LastMatch = match;
+            }
+
+            return match.Success;
+        }
+
+        /// <summary>
+        /// Gets regular expression to evaluate.
+        /// </summary>
+        private Regex GetRegex(IRewriteContext context)
+        {
             // Use double-checked locking pattern to synchronise access to the regex.
             if (_regex == null)
             {
@@ -47,18 +64,12 @@ namespace Intelligencia.UrlRewriter.Conditions
                 {
                     if (_regex == null)
                     {
-                        _regex = new Regex(context.ResolveLocation(Pattern), RegexOptions.IgnoreCase);
+                        _regex = new Regex(context.ResolveLocation(_pattern), RegexOptions.IgnoreCase);
                     }
                 }
             }
 
-            Match match = _regex.Match(context.Location);
-            if (match.Success)
-            {
-                context.LastMatch = match;
-            }
-
-            return match.Success;
+            return _regex;
         }
 
         /// <summary>
@@ -69,7 +80,7 @@ namespace Intelligencia.UrlRewriter.Conditions
             get { return _pattern; }
         }
 
-        private Regex _regex;
         private string _pattern;
+        private Regex _regex;
     }
 }

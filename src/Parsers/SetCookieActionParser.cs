@@ -60,7 +60,12 @@ namespace Intelligencia.UrlRewriter.Parsers
                 throw new ArgumentNullException("config");
             }
 
-            string cookieName = node.GetRequiredAttribute(Constants.AttrCookie);
+            string cookieName = node.GetOptionalAttribute(Constants.AttrCookie);
+            if (String.IsNullOrEmpty(cookieName))
+            {
+                return null;
+            }
+
             string cookieValue = node.GetRequiredAttribute(Constants.AttrValue, true);
 
             return new SetCookieAction(cookieName, cookieValue);

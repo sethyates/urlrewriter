@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
+using Intelligencia.UrlRewriter.Mocks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Intelligencia.UrlRewriter.Actions.Tests
@@ -10,33 +8,25 @@ namespace Intelligencia.UrlRewriter.Actions.Tests
     public class AddHeaderActionTest
     {
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void Constructor_WithNullHeader_Throws()
         {
             // Arrange
             string header = null;
             string value = "HeaderValue";
 
-            // Act
-            AddHeaderAction action = new AddHeaderAction(header, value);
-
-            // Assert
-            // -- should throw ArgumentNullException
+            // Act/Assert
+            ExceptionAssert.Throws<ArgumentNullException>(() => new AddHeaderAction(header, value));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void Constructor_WithNullValue_Throws()
         {
             // Arrange
             string header = "HeaderName";
             string value = null;
 
-            // Act
-            AddHeaderAction action = new AddHeaderAction(header, value);
-
-            // Assert
-            // -- should throw ArgumentNullException
+            // Act/Assert
+            ExceptionAssert.Throws<ArgumentNullException>(() => new AddHeaderAction(header, value));
         }
 
         [TestMethod]
@@ -50,34 +40,30 @@ namespace Intelligencia.UrlRewriter.Actions.Tests
             AddHeaderAction action = new AddHeaderAction(header, value);
 
             // Assert
-            StringAssert.Equals(header, action.Header);
-            StringAssert.Equals(value, action.Value);
+            Assert.AreEqual(header, action.Header);
+            Assert.AreEqual(value, action.Value);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void Execute_WithNullContext_Throws()
         {
             // Arrange
             string header = "HeaderName";
             string value = "HeaderValue";
-            RewriteContext context = null;
+            IRewriteContext context = null;
             AddHeaderAction action = new AddHeaderAction(header, value);
 
-            // Act
-            action.Execute(context);
-
-            // Assert
-            // -- should throw ArgumentNullException
+            // Act/Assert
+            ExceptionAssert.Throws<ArgumentNullException>(() => action.Execute(context));
         }
 
         [TestMethod]
-        public void Execute_SetsResponseHeaderAndReturnsContinueProcessing()
+        public void Execute_SetsResponseHeader_ReturnsContinueProcessing()
         {
             // Arrange
             string header = "HeaderName";
             string value = "HeaderValue";
-            RewriteContext context = new RewriteContext();
+            IRewriteContext context = new MockRewriteContext();
             AddHeaderAction action = new AddHeaderAction(header, value);
 
             // Act
@@ -85,8 +71,8 @@ namespace Intelligencia.UrlRewriter.Actions.Tests
 
             // Assert
             CollectionAssert.Contains(context.ResponseHeaders.Keys, header);
-            StringAssert.Equals(context.ResponseHeaders[header], value);
-            Assert.AreEqual(result, RewriteProcessing.ContinueProcessing);
+            Assert.AreEqual(value, context.ResponseHeaders[header]);
+            Assert.AreEqual(RewriteProcessing.ContinueProcessing, result);
         }
     }
 }

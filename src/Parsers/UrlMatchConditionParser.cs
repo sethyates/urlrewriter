@@ -13,7 +13,7 @@ using Intelligencia.UrlRewriter.Utilities;
 namespace Intelligencia.UrlRewriter.Parsers
 {
     /// <summary>
-    /// Parser for url match conditions.
+    /// Parser for URL match conditions.
     /// </summary>
     public sealed class UrlMatchConditionParser : IRewriteConditionParser
     {

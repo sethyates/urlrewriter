@@ -29,13 +29,14 @@ namespace Intelligencia.UrlRewriter.Conditions
         /// </summary>
         /// <param name="context">The rewriting context.</param>
         /// <returns>True if the condition is met.</returns>
-        public override bool IsMatch(RewriteContext context)
+        public override bool IsMatch(IRewriteContext context)
         {
             if (context == null)
             {
                 throw new ArgumentNullException("context");
             }
-            return Pattern.IsMatch(context.Method);
+
+            return Pattern.IsMatch(context.HttpContext.HttpMethod);
         }
 
         private static string GetMethodPattern(string method)

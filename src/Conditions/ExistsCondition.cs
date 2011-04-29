@@ -25,6 +25,7 @@ namespace Intelligencia.UrlRewriter.Conditions
             {
                 throw new ArgumentNullException("location");
             }
+
             _location = location;
         }
 
@@ -33,7 +34,7 @@ namespace Intelligencia.UrlRewriter.Conditions
         /// </summary>
         /// <param name="context">The rewriting context.</param>
         /// <returns>True if the condition is met.</returns>
-        public bool IsMatch(RewriteContext context)
+        public bool IsMatch(IRewriteContext context)
         {
             if (context == null)
             {
@@ -42,7 +43,7 @@ namespace Intelligencia.UrlRewriter.Conditions
 
             try
             {
-                string filename = context.MapPath(context.Expand(_location));
+                string filename = context.HttpContext.MapPath(context.Expand(_location));
                 return File.Exists(filename) || Directory.Exists(filename);
             }
             catch

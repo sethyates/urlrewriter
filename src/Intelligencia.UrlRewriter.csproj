@@ -149,8 +149,11 @@
     <Compile Include="Configuration\TransformFactory.cs" />
     <Compile Include="Errors\DefaultErrorHandler.cs" />
     <Compile Include="Errors\IRewriteErrorHandler.cs" />
+    <Compile Include="Extensions\ListExtensions.cs" />
+    <Compile Include="Extensions\XmlNodeExtensions.cs" />
     <Compile Include="Form.cs" />
     <Compile Include="FormRewriterControlAdapter.cs" />
+    <Compile Include="IRewriteContext.cs" />
     <Compile Include="Logging\DebugLogger.cs" />
     <Compile Include="Logging\IRewriteLogger.cs" />
     <Compile Include="Logging\NullLogger.cs" />
@@ -199,7 +202,6 @@
     <Compile Include="Utilities\Message.cs" />
     <Compile Include="Utilities\MessageProvider.cs" />
     <Compile Include="Utilities\TypeHelper.cs" />
-    <Compile Include="XmlNodeExtensions.cs" />
     <EmbeddedResource Include="Messages.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>

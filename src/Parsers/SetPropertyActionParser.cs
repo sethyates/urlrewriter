@@ -60,7 +60,12 @@ namespace Intelligencia.UrlRewriter.Parsers
                 throw new ArgumentNullException("config");
             }
 
-            string propertyName = node.GetRequiredAttribute(Constants.AttrProperty);
+            string propertyName = node.GetOptionalAttribute(Constants.AttrProperty);
+            if (String.IsNullOrEmpty(propertyName))
+            {
+                return null;
+            }
+
             string propertyValue = node.GetRequiredAttribute(Constants.AttrValue, true);
 
             return new SetPropertyAction(propertyName, propertyValue);

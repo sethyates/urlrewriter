@@ -6,8 +6,10 @@
 // 
 
 using System;
-using System.Web;
+using System.Collections;
 using System.Collections.Specialized;
+using System.Net;
+using System.Web;
 
 namespace Intelligencia.UrlRewriter.Utilities
 {
@@ -19,19 +21,13 @@ namespace Intelligencia.UrlRewriter.Utilities
     internal class HttpContextFacade : IHttpContext
     {
         /// <summary>
-        /// Default constructor.
+        /// Maps the given URL to the absolute local path.
         /// </summary>
-        public HttpContextFacade()
+        /// <param name="url">The URL to map.</param>
+        /// <returns>The absolute local file path relating to the URL.</returns>
+        public string MapPath(string url)
         {
-            _mapPath = new MapPath(InternalMapPath);
-        }
-
-        /// <summary>
-        /// MapPath delegate.
-        /// </summary>
-        public MapPath MapPath
-        {
-            get { return _mapPath; }
+            return HttpContext.Current.Server.MapPath(url);
         }
 
         /// <summary>
@@ -43,7 +39,7 @@ namespace Intelligencia.UrlRewriter.Utilities
         }
 
         /// <summary>
-        /// Retrieves the raw url.
+        /// Retrieves the raw URL.
         /// </summary>
         public string RawUrl
         {
@@ -51,7 +47,7 @@ namespace Intelligencia.UrlRewriter.Utilities
         }
 
         /// <summary>
-        /// Retrieves the current request url.
+        /// Retrieves the current request URL.
         /// </summary>
         public Uri RequestUrl
         {
@@ -59,37 +55,27 @@ namespace Intelligencia.UrlRewriter.Utilities
         }
 
         /// <summary>
-        /// Maps the url to the local file path.
-        /// </summary>
-        /// <param name="url">The url to map.</param>
-        /// <returns>The local file path.</returns>
-        private string InternalMapPath(string url)
-        {
-            return HttpContext.Current.Server.MapPath(url);
-        }
-
-        /// <summary>
         /// Sets the status code for the response.
         /// </summary>
         /// <param name="code">The status code.</param>
-        public void SetStatusCode(int code)
+        public void SetStatusCode(HttpStatusCode code)
         {
-            HttpContext.Current.Response.StatusCode = code;
+            HttpContext.Current.Response.StatusCode = (int)code;
         }
 
         /// <summary>
-        /// Rewrites the request to the new url.
+        /// Rewrites the request to the new URL.
         /// </summary>
-        /// <param name="url">The new url to rewrite to.</param>
+        /// <param name="url">The new URL to rewrite to.</param>
         public void RewritePath(string url)
         {
             HttpContext.Current.RewritePath(url, false);
         }
 
         /// <summary>
-        /// Sets the redirection location to the given url.
+        /// Sets the redirection location to the given URL.
         /// </summary>
-        /// <param name="url">The url of the redirection location.</param>
+        /// <param name="url">The URL of the redirection location.</param>
         public void SetRedirectLocation(string url)
         {
             HttpContext.Current.Response.RedirectLocation = url;
@@ -124,27 +110,15 @@ namespace Intelligencia.UrlRewriter.Utilities
         }
 
         /// <summary>
-        /// Sets a context item.
+        /// The Items collection for the current request.
         /// </summary>
-        /// <param name="item">The item key</param>
-        /// <param name="value">The item value</param>
-        public void SetItem(object item, object value)
+        public IDictionary Items
         {
-            HttpContext.Current.Items[item] = value;
+            get { return HttpContext.Current.Items; }
         }
 
         /// <summary>
-        /// Retrieves a context item.
-        /// </summary>
-        /// <param name="item">The item key.</param>
-        /// <returns>The item value.</returns>
-        public object GetItem(object item)
-        {
-            return HttpContext.Current.Items[item];
-        }
-
-        /// <summary>
-        /// Retrieves the HTTP method used by the request.
+        /// Retrieves the HTTP method used by the request (GET, POST, HEAD, PUT, DELETE).
         /// </summary>
         public string HttpMethod
         {
@@ -174,7 +148,5 @@ namespace Intelligencia.UrlRewriter.Utilities
         {
             get { return HttpContext.Current.Request.Cookies; }
         }
-
-        private MapPath _mapPath;
     }
 }

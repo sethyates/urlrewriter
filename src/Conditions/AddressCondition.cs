@@ -26,6 +26,7 @@ namespace Intelligencia.UrlRewriter.Conditions
             {
                 throw new ArgumentNullException("pattern");
             }
+
             _range = IPRange.Parse(pattern);
         }
 

@@ -62,28 +62,37 @@ namespace Intelligencia.UrlRewriter.Parsers
 
             string to = node.GetRequiredAttribute(Constants.AttrTo, true);
 
-            XmlNode processingNode = node.Attributes[Constants.AttrProcessing];
-
-            RewriteProcessing processing = RewriteProcessing.ContinueProcessing;
-            if (processingNode != null)
-            {
-                if (processingNode.Value == Constants.AttrValueRestart)
-                {
-                    processing = RewriteProcessing.RestartProcessing;
-                }
-                else if (processingNode.Value == Constants.AttrValueStop)
-                {
-                    processing = RewriteProcessing.StopProcessing;
-                }
-                else if (processingNode.Value != Constants.AttrValueContinue)
-                {
-                    throw new ConfigurationErrorsException(MessageProvider.FormatString(Message.ValueOfProcessingAttribute, processingNode.Value, Constants.AttrValueContinue, Constants.AttrValueRestart, Constants.AttrValueStop), node);
-                }
-            }
+            RewriteProcessing processing = ParseProcessing(node);
 
             RewriteAction action = new RewriteAction(to, processing);
             ParseConditions(node, action.Conditions, false, config);
+
             return action;
+        }
+
+        private RewriteProcessing ParseProcessing(XmlNode node)
+        {
+            string processing = node.GetOptionalAttribute(Constants.AttrProcessing);
+            if (processing == null)
+            {
+                // Default to ContinueProcessing if processing attribute is missing.
+                return RewriteProcessing.ContinueProcessing;
+            }
+
+            switch (processing)
+            {
+                case Constants.AttrValueRestart:
+                    return RewriteProcessing.RestartProcessing;
+
+                case Constants.AttrValueStop: 
+                    return RewriteProcessing.StopProcessing;
+
+                case Constants.AttrValueContinue:
+                    return RewriteProcessing.ContinueProcessing;
+
+                default:
+                    throw new ConfigurationErrorsException(MessageProvider.FormatString(Message.ValueOfProcessingAttribute, processing, Constants.AttrValueContinue, Constants.AttrValueRestart, Constants.AttrValueStop), node);
+            }
         }
     }
 }

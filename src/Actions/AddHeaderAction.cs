@@ -29,6 +29,7 @@ namespace Intelligencia.UrlRewriter.Actions
             {
                 throw new ArgumentNullException("value");
             }
+
             _header = header;
             _value = value;
         }

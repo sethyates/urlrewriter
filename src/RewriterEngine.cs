@@ -195,35 +195,46 @@ namespace Intelligencia.UrlRewriter
 
         private void ProcessRules(IRewriteContext context)
         {
-            IList<IRewriteAction> rewriteRules = _configuration.Rules;
-            int restarts = 0;
-            for (int i = 0; i < rewriteRules.Count; i++)
+            ProcessRules(context, _configuration.Rules, 0);
+        }
+
+        private void ProcessRules(IRewriteContext context, IList<IRewriteAction> rewriteRules, int restarts)
+        {
+            foreach (IRewriteAction action in rewriteRules)
             {
                 // If the rule is conditional, ensure the conditions are met.
-                IRewriteCondition condition = rewriteRules[i] as IRewriteCondition;
+                IRewriteCondition condition = action as IRewriteCondition;
                 if (condition == null || condition.IsMatch(context))
                 {
                     // Execute the action.
-                    IRewriteAction action = rewriteRules[i];
                     RewriteProcessing processing = action.Execute(context);
 
                     // If the action is Stop, then break out of the processing loop
                     if (processing == RewriteProcessing.StopProcessing)
                     {
                         _configuration.Logger.Debug(MessageProvider.FormatString(Message.StoppingBecauseOfRule));
+
+                        // Exit the loop.
                         break;
                     }
-                    else if (processing == RewriteProcessing.RestartProcessing)
+
+                    // If the action is Restart, then start again.
+                    if (processing == RewriteProcessing.RestartProcessing)
                     {
                         _configuration.Logger.Debug(MessageProvider.FormatString(Message.RestartingBecauseOfRule));
 
-                        // Restart from the first rule.
-                        i = 0;
-
-                        if (++restarts > MaxRestarts)
+                        // Increment the number of restarts and check that we have not exceeded our max.
+                        restarts++;
+                        if (restarts > MaxRestarts)
                         {
                             throw new InvalidOperationException(MessageProvider.FormatString(Message.TooManyRestarts));
                         }
+
+                        // Restart again from the first rule by calling this method recursively.
+                        ProcessRules(context, rewriteRules, restarts);
+
+                        // Exit the loop.
+                        break;
                     }
                 }
             }
@@ -282,7 +293,7 @@ namespace Intelligencia.UrlRewriter
             _httpContext.SetStatusCode(context.StatusCode);
 
             // Get the error handler if there is one.
-            if (_configuration.ErrorHandlers.ContainsKey((int)context.StatusCode))
+            if (!_configuration.ErrorHandlers.ContainsKey((int)context.StatusCode))
             {
                 // No error handler for this status code?
                 // Just throw an HttpException with the appropriate status code.

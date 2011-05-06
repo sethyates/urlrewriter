@@ -57,16 +57,7 @@ namespace Intelligencia.UrlRewriter.Parsers
             }
 
             string to = node.GetRequiredAttribute(Constants.AttrTo, true);
-
-            bool permanent = true;
-            XmlNode permanentNode = node.Attributes.GetNamedItem(Constants.AttrPermanent);
-            if (permanentNode != null)
-            {
-                if (!bool.TryParse(permanentNode.Value, out permanent))
-                {
-                    throw new ConfigurationErrorsException(MessageProvider.FormatString(Message.InvalidBooleanAttribute, Constants.AttrPermanent), node);
-                }
-            }
+            bool permanent = node.GetBooleanAttribute(Constants.AttrPermanent) ?? true;
 
             RedirectAction action = new RedirectAction(to, permanent);
             ParseConditions(node, action.Conditions, false, config);

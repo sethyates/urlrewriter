@@ -17,3 +17,6 @@ usually at the following location:
 	C:\Program Files\Microsoft Visual Studio 10.0\Common7\IDE
 
 More info: http://go.microsoft.com/fwlink/?LinkId=201405
+
+
+Please note that this file is ALSO used to test the "exists" conditition.

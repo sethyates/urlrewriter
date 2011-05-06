@@ -25,6 +25,7 @@ namespace Intelligencia.UrlRewriter.Errors
             {
                 throw new ArgumentNullException("url");
             }
+
             _url = url;
         }
 
@@ -38,6 +39,7 @@ namespace Intelligencia.UrlRewriter.Errors
             {
                 throw new ArgumentNullException("context");
             }
+
             context.Server.Execute(_url);
         }
 

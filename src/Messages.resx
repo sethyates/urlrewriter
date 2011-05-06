@@ -195,6 +195,9 @@
   <data name="InvalidBooleanAttribute" xml:space="preserve">
     <value>The value of the attribute '{0}' is invalid.  It must be either 'true', 'false'.</value>
   </data>
+  <data name="InvalidIntegerAttribute" xml:space="preserve">
+    <value>The value of the attribute '{0}' is invalid.  It must be set to an integer.</value>
+  </data>
   <data name="MissingConfigFileSection" xml:space="preserve">
     <value>The application config file is missing the required section '{0}'.</value>
   </data>

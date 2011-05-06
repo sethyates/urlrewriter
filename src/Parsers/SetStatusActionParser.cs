@@ -60,13 +60,13 @@ namespace Intelligencia.UrlRewriter.Parsers
                 throw new ArgumentNullException("config");
             }
 
-            XmlNode statusCodeNode = node.Attributes.GetNamedItem(Constants.AttrStatus);
-            if (statusCodeNode == null)
+            int? statusCode = node.GetIntegerAttribute(Constants.AttrStatus);
+            if (!statusCode.HasValue)
             {
                 return null;
             }
 
-            return new SetStatusAction((HttpStatusCode)Convert.ToInt32(statusCodeNode.Value));
+            return new SetStatusAction((HttpStatusCode)statusCode.Value);
         }
     }
 }

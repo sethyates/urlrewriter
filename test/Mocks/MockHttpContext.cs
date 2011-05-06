@@ -175,7 +175,7 @@ namespace Intelligencia.UrlRewriter.Mocks
         /// <summary>
         /// Mock implementation of IHttpContext.HttpMethod
         /// </summary>
-        public string HttpMethod { get; private set; }
+        public string HttpMethod { get; set; }
 
         /// <summary>
         /// Mock implementation of IHttpContext.ServerVariables

@@ -33,7 +33,6 @@ namespace Intelligencia.UrlRewriter
         /// Gets a required attribute from an XML node.
         /// Throws an error if the required attribute is missing.
         /// Throws an error if the required attribute is empty (blank) and allowBlank is set to false.
-        /// or empty (blank).
         /// </summary>
         /// <param name="node">The XML node</param>
         /// <param name="attributeName">The XML attribute name</param>
@@ -60,11 +59,26 @@ namespace Intelligencia.UrlRewriter
             return attribute.Value;
         }
         
+        /// <summary>
+        /// Gets an optional attribute from an XML node.
+        /// Returns null if the attribute is missing.
+        /// </summary>
+        /// <param name="node">The XML node</param>
+        /// <param name="attributeName">The XML attribute name</param>
+        /// <returns>The attribute value</returns>
         public static string GetOptionalAttribute(this XmlNode node, string attributeName)
         {
             return node.GetOptionalAttribute(attributeName, null);
         }
 
+        /// <summary>
+        /// Gets an optional attribute from an XML node.
+        /// Returns null if the attribute is missing.
+        /// </summary>
+        /// <param name="node">The XML node</param>
+        /// <param name="attributeName">The XML attribute name</param>
+        /// <param name="defaultValue">The default value</param>
+        /// <returns>The attribute value</returns>
         public static string GetOptionalAttribute(this XmlNode node, string attributeName, string defaultValue)
         {
             if (node == null)
@@ -79,6 +93,54 @@ namespace Intelligencia.UrlRewriter
             }
 
             return attribute.Value;
+        }
+
+        /// <summary>
+        /// Gets (parses) a boolean attribute from an XML node.
+        /// Throws an exception if the value in the attribute is an invalid boolean value.
+        /// </summary>
+        /// <param name="node">The XML node</param>
+        /// <param name="attributeName">The XML attribute name</param>
+        /// <returns>The boolean value, or null if the value was missing</returns>
+        public static bool? GetBooleanAttribute(this XmlNode node, string attributeName)
+        {
+            string attributeValue = node.GetOptionalAttribute(attributeName);
+            if (attributeValue == null)
+            {
+                return null;
+            }
+
+            bool returnValue;
+            if (!bool.TryParse(attributeValue, out returnValue))
+            {
+                throw new ConfigurationErrorsException(MessageProvider.FormatString(Message.InvalidBooleanAttribute, attributeName), node);
+            }
+
+            return returnValue;
+        }
+
+        /// <summary>
+        /// Gets (parses) an integer attribute from an XML node.
+        /// Throws an exception if the value in the attribute not an integer.
+        /// </summary>
+        /// <param name="node">The XML node</param>
+        /// <param name="attributeName">The XML attribute name</param>
+        /// <returns>The integer value, or null if the value was missing</returns>
+        public static int? GetIntegerAttribute(this XmlNode node, string attributeName)
+        {
+            string attributeValue = node.GetOptionalAttribute(attributeName);
+            if (attributeValue == null)
+            {
+                return null;
+            }
+
+            int returnValue;
+            if (!int.TryParse(attributeValue, out returnValue))
+            {
+                throw new ConfigurationErrorsException(MessageProvider.FormatString(Message.InvalidIntegerAttribute, attributeName), node);
+            }
+
+            return returnValue;
         }
     }
 }

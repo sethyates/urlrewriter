@@ -40,6 +40,7 @@ namespace Intelligencia.UrlRewriter.Utilities
         StartedProcessing,
         AttributeCannotBeBlank,
         InvalidBooleanAttribute,
+        InvalidIntegerAttribute,
         MissingConfigFileSection,
         MappingNotFound,
         TransformFunctionNotFound

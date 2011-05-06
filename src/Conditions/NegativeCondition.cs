@@ -24,6 +24,7 @@ namespace Intelligencia.UrlRewriter.Conditions
             {
                 throw new ArgumentNullException("chainedCondition");
             }
+
             _chainedCondition = chainedCondition;
         }
 

@@ -60,7 +60,12 @@ namespace Intelligencia.UrlRewriter.Parsers
                 throw new ArgumentNullException("config");
             }
 
-            string headerName = node.GetRequiredAttribute(Constants.AttrHeader);
+            string headerName = node.GetOptionalAttribute(Constants.AttrHeader);
+            if (headerName == null)
+            {
+                return null;
+            }
+
             string headerValue = node.GetRequiredAttribute(Constants.AttrValue, true);
 
             return new AddHeaderAction(headerName, headerValue);

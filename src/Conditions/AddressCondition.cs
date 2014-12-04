@@ -26,6 +26,7 @@ namespace Intelligencia.UrlRewriter.Conditions
             {
                 throw new ArgumentNullException("pattern");
             }
+
             _range = IPRange.Parse(pattern);
         }
 
@@ -34,13 +35,15 @@ namespace Intelligencia.UrlRewriter.Conditions
         /// </summary>
         /// <param name="context">The rewriting context.</param>
         /// <returns>True if the condition is met.</returns>
-        public bool IsMatch(RewriteContext context)
+        public bool IsMatch(IRewriteContext context)
         {
             if (context == null)
             {
                 throw new ArgumentNullException("context");
             }
+
             string ipAddress = context.Properties[Constants.RemoteAddressHeader];
+
             return (ipAddress != null && _range.InRange(IPAddress.Parse(ipAddress)));
         }
 

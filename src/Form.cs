@@ -17,7 +17,7 @@ namespace Intelligencia.UrlRewriter
     /// Replacement for &lt;asp:form&gt; to handle rewritten form postback.
     /// </summary>
     /// <remarks>
-    /// <p>This form should be used for pages that use the url rewriter and have
+    /// <p>This form should be used for pages that use the URL Rewriter and have
     /// forms that are posted back.  If you use the normal ASP.NET <see cref="System.Web.UI.HtmlControls.HtmlForm">HtmlForm</see>,
     /// then the postback will not be able to correctly resolve the postback data to the form data.
     /// </p>

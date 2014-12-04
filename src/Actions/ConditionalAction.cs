@@ -36,26 +36,22 @@ namespace Intelligencia.UrlRewriter.Actions
         /// </summary>
         /// <param name="context">The context to match on.</param>
         /// <returns>True if the condition matches.</returns>
-        public virtual bool IsMatch(RewriteContext context)
+        public virtual bool IsMatch(IRewriteContext context)
         {
-            // Ensure the conditions are met.
-            foreach (IRewriteCondition condition in Conditions)
-            {
-                if (!condition.IsMatch(context))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            return Conditions.IsMatch(context);
         }
 
         /// <summary>
         /// Executes the rule.
         /// </summary>
         /// <param name="context">The rewrite context</param>
-        public virtual RewriteProcessing Execute(RewriteContext context)
+        public virtual RewriteProcessing Execute(IRewriteContext context)
         {
+            if (context == null)
+            {
+                throw new ArgumentNullException("context");
+            }
+
             // Execute the actions.
             for (int i = 0; i < Actions.Count; i++)
             {

@@ -29,13 +29,13 @@ namespace Intelligencia.UrlRewriter.Parsers
                 throw new ArgumentNullException("node");
             }
 
-            XmlNode addressAttr = node.Attributes.GetNamedItem(Constants.AttrAddress);
-            if (addressAttr == null)
+            string address = node.GetOptionalAttribute(Constants.AttrAddress);
+            if (address == null)
             {
                 return null;
             }
 
-            return new AddressCondition(addressAttr.Value);
+            return new AddressCondition(address);
         }
     }
 }

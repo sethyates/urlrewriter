@@ -16,20 +16,22 @@ namespace Intelligencia.UrlRewriter.Configuration
     /// </summary>
     public class ActionParserFactory
     {
+        /*
         /// <summary>
         /// Adds a parser.
         /// </summary>
         /// <param name="parserType">The parser type.</param>
-        public void AddParser(string parserType)
+        public void Add(string parserType)
         {
-            AddParser((IRewriteActionParser)TypeHelper.Activate(parserType, null));
+            Add((IRewriteActionParser)TypeHelper.Activate(parserType, null));
         }
+         */
 
         /// <summary>
         /// Adds a parser.
         /// </summary>
         /// <param name="parser">The parser.</param>
-        public void AddParser(IRewriteActionParser parser)
+        public void Add(IRewriteActionParser parser)
         {
             if (parser == null)
             {
@@ -63,6 +65,6 @@ namespace Intelligencia.UrlRewriter.Configuration
                     : null;
         }
 
-        private Dictionary<string, IList<IRewriteActionParser>> _parsers = new Dictionary<string, IList<IRewriteActionParser>>();
+        private IDictionary<string, IList<IRewriteActionParser>> _parsers = new Dictionary<string, IList<IRewriteActionParser>>();
     }
 }

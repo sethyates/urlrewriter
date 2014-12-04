@@ -24,6 +24,7 @@ namespace Intelligencia.UrlRewriter.Actions
             {
                 throw new ArgumentNullException("location");
             }
+
             _location = location;
         }
 
@@ -41,13 +42,15 @@ namespace Intelligencia.UrlRewriter.Actions
         /// Executes the action.
         /// </summary>
         /// <param name="context">The rewriting context.</param>
-        public virtual RewriteProcessing Execute(RewriteContext context)
+        public virtual RewriteProcessing Execute(IRewriteContext context)
         {
             if (context == null)
             {
                 throw new ArgumentNullException("context");
             }
+
             context.Location = context.ResolveLocation(context.Expand(Location));
+
             return RewriteProcessing.StopProcessing;
         }
 

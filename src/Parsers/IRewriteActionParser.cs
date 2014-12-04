@@ -26,7 +26,7 @@ namespace Intelligencia.UrlRewriter
         /// <param name="config">The rewriter configuration.</param>
         /// <returns>The action parsed.  If the parser could not parse the node,
         /// it <strong>must</strong> return null.</returns>
-        IRewriteAction Parse(XmlNode node, RewriterConfiguration config);
+        IRewriteAction Parse(XmlNode node, IRewriterConfiguration config);
 
         /// <summary>
         /// The name of the action.

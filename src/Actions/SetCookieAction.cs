@@ -30,6 +30,7 @@ namespace Intelligencia.UrlRewriter.Actions
             {
                 throw new ArgumentNullException("cookieValue");
             }
+
             _name = cookieName;
             _value = cookieValue;
         }
@@ -54,14 +55,16 @@ namespace Intelligencia.UrlRewriter.Actions
         /// Executes the action.
         /// </summary>
         /// <param name="context">The rewrite context.</param>
-        public RewriteProcessing Execute(RewriteContext context)
+        public RewriteProcessing Execute(IRewriteContext context)
         {
             if (context == null)
             {
                 throw new ArgumentNullException("context");
             }
+
             HttpCookie cookie = new HttpCookie(Name, Value);
             context.ResponseCookies.Add(cookie);
+
             return RewriteProcessing.ContinueProcessing;
         }
 

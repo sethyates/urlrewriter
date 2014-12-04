@@ -18,18 +18,19 @@ namespace Intelligencia.UrlRewriter.Errors
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="url">Url of the error page.</param>
+        /// <param name="url">URL of the error page.</param>
         public DefaultErrorHandler(string url)
         {
             if (url == null)
             {
                 throw new ArgumentNullException("url");
             }
+
             _url = url;
         }
 
         /// <summary>
-        /// Handles the error by rewriting to the error page url.
+        /// Handles the error by rewriting to the error page URL.
         /// </summary>
         /// <param name="context">The context.</param>
         public void HandleError(HttpContext context)
@@ -38,6 +39,7 @@ namespace Intelligencia.UrlRewriter.Errors
             {
                 throw new ArgumentNullException("context");
             }
+
             context.Server.Execute(_url);
         }
 

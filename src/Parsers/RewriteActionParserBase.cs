@@ -25,7 +25,7 @@ namespace Intelligencia.UrlRewriter.Parsers
         /// <param name="node">The node to parse.</param>
         /// <param name="config">The rewriter configuration.</param>
         /// <returns>The parsed action, null if no action parsed.</returns>
-        public abstract IRewriteAction Parse(XmlNode node, RewriterConfiguration config);
+        public abstract IRewriteAction Parse(XmlNode node, IRewriterConfiguration config);
 
         /// <summary>
         /// The name of the action.
@@ -49,7 +49,7 @@ namespace Intelligencia.UrlRewriter.Parsers
         /// <param name="conditions">Conditions list to add new conditions to.</param>
         /// <param name="negative">Whether the conditions should be negated.</param>
         /// <param name="config">Rewriter configuration</param>
-        protected void ParseConditions(XmlNode node, IList<IRewriteCondition> conditions, bool negative, RewriterConfiguration config)
+        protected void ParseConditions(XmlNode node, IList<IRewriteCondition> conditions, bool negative, IRewriterConfiguration config)
         {
             if (config == null)
             {

@@ -55,7 +55,7 @@ namespace Intelligencia.UrlRewriter.Actions
         /// Executes the action.
         /// </summary>
         /// <param name="context">The rewrite context.</param>
-        public RewriteProcessing Execute(RewriteContext context)
+        public RewriteProcessing Execute(IRewriteContext context)
         {
             if (context == null)
             {
@@ -65,6 +65,7 @@ namespace Intelligencia.UrlRewriter.Actions
             // If the value cannot be found in AppSettings, default to an empty string.
             string appSettingValue = context.ConfigurationManager.AppSettings[_appSettingsKey] ?? String.Empty;
             context.Properties.Set(Name, appSettingValue);
+
             return RewriteProcessing.ContinueProcessing;
         }
 

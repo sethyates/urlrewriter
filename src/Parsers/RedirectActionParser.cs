@@ -49,7 +49,7 @@ namespace Intelligencia.UrlRewriter.Parsers
         /// <param name="node">The node to parse.</param>
         /// <param name="config">The rewriter configuration.</param>
         /// <returns>The parsed action, or null if no action parsed.</returns>
-        public override IRewriteAction Parse(XmlNode node, RewriterConfiguration config)
+        public override IRewriteAction Parse(XmlNode node, IRewriterConfiguration config)
         {
             if (node == null)
             {
@@ -57,16 +57,7 @@ namespace Intelligencia.UrlRewriter.Parsers
             }
 
             string to = node.GetRequiredAttribute(Constants.AttrTo, true);
-
-            bool permanent = true;
-            XmlNode permanentNode = node.Attributes.GetNamedItem(Constants.AttrPermanent);
-            if (permanentNode != null)
-            {
-                if (!bool.TryParse(permanentNode.Value, out permanent))
-                {
-                    throw new ConfigurationErrorsException(MessageProvider.FormatString(Message.InvalidBooleanAttribute, Constants.AttrPermanent), node);
-                }
-            }
+            bool permanent = node.GetBooleanAttribute(Constants.AttrPermanent) ?? true;
 
             RedirectAction action = new RedirectAction(to, permanent);
             ParseConditions(node, action.Conditions, false, config);

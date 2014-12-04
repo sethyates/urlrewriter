@@ -30,15 +30,15 @@ namespace Intelligencia.UrlRewriter.Parsers
                 throw new ArgumentNullException("node");
             }
 
-            XmlNode propertyAttr = node.Attributes.GetNamedItem(Constants.AttrProperty);
-            if (propertyAttr == null)
+            string property = node.GetOptionalAttribute(Constants.AttrProperty);
+            if (property == null)
             {
                 return null;
             }
 
             string match = node.GetRequiredAttribute(Constants.AttrMatch, true);
 
-            return new PropertyMatchCondition(propertyAttr.Value, match);
+            return new PropertyMatchCondition(property, match);
         }
     }
 }

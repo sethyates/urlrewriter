@@ -28,6 +28,7 @@ namespace Intelligencia.UrlRewriter.Actions
             {
                 throw new ArgumentNullException("location");
             }
+
             _permanent = permanent;
         }
 
@@ -35,7 +36,7 @@ namespace Intelligencia.UrlRewriter.Actions
         /// Executes the action.
         /// </summary>
         /// <param name="context">The rewriting context.</param>
-        public override RewriteProcessing Execute(RewriteContext context)
+        public override RewriteProcessing Execute(IRewriteContext context)
         {
             if (context == null)
             {
@@ -56,18 +57,9 @@ namespace Intelligencia.UrlRewriter.Actions
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        public bool IsMatch(RewriteContext context)
+        public bool IsMatch(IRewriteContext context)
         {
-            // Ensure the conditions are met.
-            foreach (IRewriteCondition condition in Conditions)
-            {
-                if (!condition.IsMatch(context))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            return Conditions.IsMatch(context);
         }
 
         /// <summary>

@@ -6,10 +6,6 @@
 // 
 
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
 using System.Xml;
 using Intelligencia.UrlRewriter.Actions;
 using Intelligencia.UrlRewriter.Configuration;
@@ -52,7 +48,7 @@ namespace Intelligencia.UrlRewriter.Parsers
         /// <param name="node">The node to parse.</param>
         /// <param name="config">The rewriter configuration.</param>
         /// <returns>The parsed action, or null if no action parsed.</returns>
-        public override IRewriteAction Parse(XmlNode node, RewriterConfiguration config)
+        public override IRewriteAction Parse(XmlNode node, IRewriterConfiguration config)
         {
             if (node == null)
             {

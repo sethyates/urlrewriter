@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Intelligencia.UrlRewriter.Utilities;
 
 namespace Intelligencia.UrlRewriter.Configuration
@@ -14,8 +15,9 @@ namespace Intelligencia.UrlRewriter.Configuration
     /// <summary>
     /// Pipeline for creating the Condition parsers.
     /// </summary>
-    public class ConditionParserPipeline : CollectionBase
+    public class ConditionParserPipeline : List<IRewriteConditionParser>
     {
+        /*
         /// <summary>
         /// Adds a parser.
         /// </summary>
@@ -31,7 +33,8 @@ namespace Intelligencia.UrlRewriter.Configuration
         /// <param name="parser">The parser.</param>
         public void AddParser(IRewriteConditionParser parser)
         {
-            InnerList.Add(parser);
+            Add(parser);
         }
+         */
     }
 }

@@ -54,13 +54,15 @@ namespace Intelligencia.UrlRewriter.Actions
         /// Executes the action.
         /// </summary>
         /// <param name="context">The rewrite context.</param>
-        public RewriteProcessing Execute(RewriteContext context)
+        public RewriteProcessing Execute(IRewriteContext context)
         {
             if (context == null)
             {
                 throw new ArgumentNullException("context");
             }
+
             context.Properties.Set(Name, context.Expand(Value));
+
             return RewriteProcessing.ContinueProcessing;
         }
 

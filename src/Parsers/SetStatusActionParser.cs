@@ -49,7 +49,7 @@ namespace Intelligencia.UrlRewriter.Parsers
         /// <param name="node">The node to parse.</param>
         /// <param name="config">The rewriter configuration.</param>
         /// <returns>The parsed action, or null if no action parsed.</returns>
-        public override IRewriteAction Parse(XmlNode node, RewriterConfiguration config)
+        public override IRewriteAction Parse(XmlNode node, IRewriterConfiguration config)
         {
             if (node == null)
             {
@@ -60,13 +60,13 @@ namespace Intelligencia.UrlRewriter.Parsers
                 throw new ArgumentNullException("config");
             }
 
-            XmlNode statusCodeNode = node.Attributes.GetNamedItem(Constants.AttrStatus);
-            if (statusCodeNode == null)
+            int? statusCode = node.GetIntegerAttribute(Constants.AttrStatus);
+            if (!statusCode.HasValue)
             {
                 return null;
             }
 
-            return new SetStatusAction((HttpStatusCode)Convert.ToInt32(statusCodeNode.Value));
+            return new SetStatusAction((HttpStatusCode)statusCode.Value);
         }
     }
 }

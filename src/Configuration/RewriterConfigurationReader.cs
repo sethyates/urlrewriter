@@ -28,7 +28,7 @@ namespace Intelligencia.UrlRewriter.Configuration
         /// <param name="config">The rewriter configuration object to populate.</param>
         /// <param name="section">The XML node to read configuration from.</param>
         /// <returns>The configuration information.</returns>
-        public static void Read(RewriterConfiguration config, XmlNode section)
+        public static void Read(IRewriterConfiguration config, XmlNode section)
         {
             if (section == null)
             {
@@ -74,7 +74,7 @@ namespace Intelligencia.UrlRewriter.Configuration
             }
         }
 
-        private static void ReadRegisterTransform(XmlNode node, RewriterConfiguration config)
+        private static void ReadRegisterTransform(XmlNode node, IRewriterConfiguration config)
         {
             if (node.ChildNodes.Count > 0)
             {
@@ -91,10 +91,10 @@ namespace Intelligencia.UrlRewriter.Configuration
                 throw new ConfigurationErrorsException(MessageProvider.FormatString(Message.InvalidTypeSpecified, type, typeof(IRewriteTransform)), node);
             }
 
-            config.TransformFactory.AddTransform(transform);
+            config.TransformFactory.Add(transform);
         }
 
-        private static void ReadRegisterLogger(XmlNode node, RewriterConfiguration config)
+        private static void ReadRegisterLogger(XmlNode node, IRewriterConfiguration config)
         {
             if (node.ChildNodes.Count > 0)
             {
@@ -112,7 +112,7 @@ namespace Intelligencia.UrlRewriter.Configuration
             }
         }
 
-        private static void ReadRegisterParser(XmlNode node, RewriterConfiguration config)
+        private static void ReadRegisterParser(XmlNode node, IRewriterConfiguration config)
         {
             if (node.ChildNodes.Count > 0)
             {
@@ -125,17 +125,17 @@ namespace Intelligencia.UrlRewriter.Configuration
             IRewriteActionParser actionParser = parser as IRewriteActionParser;
             if (actionParser != null)
             {
-                config.ActionParserFactory.AddParser(actionParser);
+                config.ActionParserFactory.Add(actionParser);
             }
 
             IRewriteConditionParser conditionParser = parser as IRewriteConditionParser;
             if (conditionParser != null)
             {
-                config.ConditionParserPipeline.AddParser(conditionParser);
+                config.ConditionParserPipeline.Add(conditionParser);
             }
         }
 
-        private static void ReadDefaultDocuments(XmlNode node, RewriterConfiguration config)
+        private static void ReadDefaultDocuments(XmlNode node, IRewriterConfiguration config)
         {
             foreach (XmlNode childNode in node.ChildNodes)
             {
@@ -146,7 +146,7 @@ namespace Intelligencia.UrlRewriter.Configuration
             }
         }
 
-        private static void ReadErrorHandler(XmlNode node, RewriterConfiguration config)
+        private static void ReadErrorHandler(XmlNode node, IRewriterConfiguration config)
         {
             string code = node.GetRequiredAttribute(Constants.AttrCode);
 
@@ -181,10 +181,10 @@ namespace Intelligencia.UrlRewriter.Configuration
             config.ErrorHandlers.Add(statusCode, handler);
         }
 
-        private static void ReadMapping(XmlNode node, RewriterConfiguration config)
+        private static void ReadMapping(XmlNode node, IRewriterConfiguration config)
         {
             // Name attribute.
-            XmlNode nameNode = node.Attributes[Constants.AttrName];
+            string mappingName = node.GetRequiredAttribute(Constants.AttrName);
 
             // Mapper type not specified.  Load in the hash map.
             StringDictionary map = new StringDictionary();
@@ -206,10 +206,12 @@ namespace Intelligencia.UrlRewriter.Configuration
                 }
             }
 
-            config.TransformFactory.AddTransform(new StaticMappingTransform(nameNode.Value, map));
+            IRewriteTransform mapping = new StaticMappingTransform(mappingName, map);
+
+            config.TransformFactory.Add(mapping);
         }
 
-        private static void ReadRule(XmlNode node, RewriterConfiguration config)
+        private static void ReadRule(XmlNode node, IRewriterConfiguration config)
         {
             bool parsed = false;
             IList<IRewriteActionParser> parsers = config.ActionParserFactory.GetParsers(node.LocalName);

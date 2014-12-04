@@ -46,40 +46,46 @@ namespace Intelligencia.UrlRewriter.Configuration
 
             _xPoweredBy = MessageProvider.FormatString(Message.ProductName, Assembly.GetExecutingAssembly().GetName().Version.ToString(3));
 
+            // Initialise the action parser factory with all the standard actions.
             _actionParserFactory = new ActionParserFactory();
-            _actionParserFactory.AddParser(new IfConditionActionParser());
-            _actionParserFactory.AddParser(new UnlessConditionActionParser());
-            _actionParserFactory.AddParser(new AddHeaderActionParser());
-            _actionParserFactory.AddParser(new SetCookieActionParser());
-            _actionParserFactory.AddParser(new SetPropertyActionParser());
-            _actionParserFactory.AddParser(new SetAppSettingPropertyActionParser());
-            _actionParserFactory.AddParser(new RewriteActionParser());
-            _actionParserFactory.AddParser(new RedirectActionParser());
-            _actionParserFactory.AddParser(new SetStatusActionParser());
-            _actionParserFactory.AddParser(new ForbiddenActionParser());
-            _actionParserFactory.AddParser(new GoneActionParser());
-            _actionParserFactory.AddParser(new NotAllowedActionParser());
-            _actionParserFactory.AddParser(new NotFoundActionParser());
-            _actionParserFactory.AddParser(new NotImplementedActionParser());
+            _actionParserFactory.Add(new IfConditionActionParser());
+            _actionParserFactory.Add(new UnlessConditionActionParser());
+            _actionParserFactory.Add(new AddHeaderActionParser());
+            _actionParserFactory.Add(new SetCookieActionParser());
+            _actionParserFactory.Add(new SetPropertyActionParser());
+            _actionParserFactory.Add(new SetAppSettingPropertyActionParser());
+            _actionParserFactory.Add(new RewriteActionParser());
+            _actionParserFactory.Add(new RedirectActionParser());
+            _actionParserFactory.Add(new SetStatusActionParser());
+            _actionParserFactory.Add(new ForbiddenActionParser());
+            _actionParserFactory.Add(new GoneActionParser());
+            _actionParserFactory.Add(new NotAllowedActionParser());
+            _actionParserFactory.Add(new NotFoundActionParser());
+            _actionParserFactory.Add(new NotImplementedActionParser());
 
+            // Initialise the condition parser pipeline with our standard conditions.
             _conditionParserPipeline = new ConditionParserPipeline();
-            _conditionParserPipeline.AddParser(new AddressConditionParser());
-            _conditionParserPipeline.AddParser(new HeaderMatchConditionParser());
-            _conditionParserPipeline.AddParser(new MethodConditionParser());
-            _conditionParserPipeline.AddParser(new PropertyMatchConditionParser());
-            _conditionParserPipeline.AddParser(new ExistsConditionParser());
-            _conditionParserPipeline.AddParser(new UrlMatchConditionParser());
+            _conditionParserPipeline.Add(new AddressConditionParser());
+            _conditionParserPipeline.Add(new HeaderMatchConditionParser());
+            _conditionParserPipeline.Add(new MethodConditionParser());
+            _conditionParserPipeline.Add(new PropertyMatchConditionParser());
+            _conditionParserPipeline.Add(new ExistsConditionParser());
+            _conditionParserPipeline.Add(new UrlMatchConditionParser());
 
+            // Initialise the transform factory with our standard transforms.
             _transformFactory = new TransformFactory();
-            _transformFactory.AddTransform(new DecodeTransform());
-            _transformFactory.AddTransform(new EncodeTransform());
-            _transformFactory.AddTransform(new LowerTransform());
-            _transformFactory.AddTransform(new UpperTransform());
-            _transformFactory.AddTransform(new Base64Transform());
-            _transformFactory.AddTransform(new Base64DecodeTransform());
+            _transformFactory.Add(new DecodeTransform());
+            _transformFactory.Add(new EncodeTransform());
+            _transformFactory.Add(new LowerTransform());
+            _transformFactory.Add(new UpperTransform());
+            _transformFactory.Add(new Base64Transform());
+            _transformFactory.Add(new Base64DecodeTransform());
 
+            // The default documents collection is initially empty.
+            // Should we read this from IIS config?
             _defaultDocuments = new StringCollection();
 
+            // Load the rewriter configuration from the rules as specified in the web.config file.
             LoadFromConfig();
         }
 

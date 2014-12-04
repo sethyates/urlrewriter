@@ -29,6 +29,7 @@ namespace Intelligencia.UrlRewriter.Actions
             {
                 throw new ArgumentNullException("value");
             }
+
             _header = header;
             _value = value;
         }
@@ -53,13 +54,15 @@ namespace Intelligencia.UrlRewriter.Actions
         /// Executes the action.
         /// </summary>
         /// <param name="context">The rewrite context.</param>
-        public RewriteProcessing Execute(RewriteContext context)
+        public RewriteProcessing Execute(IRewriteContext context)
         {
             if (context == null)
             {
                 throw new ArgumentNullException("context");
             }
+
             context.ResponseHeaders.Add(Header, Value);
+
             return RewriteProcessing.ContinueProcessing;
         }
 

@@ -49,7 +49,7 @@ namespace Intelligencia.UrlRewriter.Parsers
         /// <param name="node">The node to parse.</param>
         /// <param name="config">The rewriter configuration.</param>
         /// <returns>The parsed action, or null if no action parsed.</returns>
-        public override IRewriteAction Parse(XmlNode node, RewriterConfiguration config)
+        public override IRewriteAction Parse(XmlNode node, IRewriterConfiguration config)
         {
             if (node == null)
             {
@@ -60,7 +60,12 @@ namespace Intelligencia.UrlRewriter.Parsers
                 throw new ArgumentNullException("config");
             }
 
-            string headerName = node.GetRequiredAttribute(Constants.AttrHeader);
+            string headerName = node.GetOptionalAttribute(Constants.AttrHeader);
+            if (headerName == null)
+            {
+                return null;
+            }
+
             string headerValue = node.GetRequiredAttribute(Constants.AttrValue, true);
 
             return new AddHeaderAction(headerName, headerValue);

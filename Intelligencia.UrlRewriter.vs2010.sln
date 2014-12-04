@@ -1,0 +1,36 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0AE0A505-E466-4555-A21C-033DE6609F33}"
+	ProjectSection(SolutionItems) = preProject
+		Intelligencia.UrlRewriter.vs2010.vsmdi = Intelligencia.UrlRewriter.vs2010.vsmdi
+		..\License.txt = ..\License.txt
+		Local.vs2010.testrunconfig = Local.vs2010.testrunconfig
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Intelligencia.UrlRewriter", "src\Intelligencia.UrlRewriter.csproj", "{F8516C67-92BE-43FF-A8A9-B71A3EA4BE0D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Intelligencia.UrlRewriter.Tests", "test\Intelligencia.UrlRewriter.Tests.csproj", "{776B0ECF-0B91-441D-A154-D62DAC1FB27C}"
+EndProject
+Global
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = Intelligencia.UrlRewriter.vs2010.vsmdi
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F8516C67-92BE-43FF-A8A9-B71A3EA4BE0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8516C67-92BE-43FF-A8A9-B71A3EA4BE0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8516C67-92BE-43FF-A8A9-B71A3EA4BE0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8516C67-92BE-43FF-A8A9-B71A3EA4BE0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{776B0ECF-0B91-441D-A154-D62DAC1FB27C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{776B0ECF-0B91-441D-A154-D62DAC1FB27C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{776B0ECF-0B91-441D-A154-D62DAC1FB27C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{776B0ECF-0B91-441D-A154-D62DAC1FB27C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -28,6 +28,6 @@ namespace Intelligencia.UrlRewriter
         /// <returns>The Processing directive determines how the rewriter should continue
         /// processing after this action has executed.</returns>
         /// <param name="context">The context to execute the action on.</param>
-        RewriteProcessing Execute(RewriteContext context);
+        RewriteProcessing Execute(IRewriteContext context);
     }
 }
